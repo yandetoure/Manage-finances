@@ -17,7 +17,8 @@
                             style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                             @foreach(range(1, 12) as $m)
                                 <option value="{{ $m }}" {{ date('n') == $m ? 'selected' : '' }}>
-                                    {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}</option>
+                                    {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -34,14 +35,14 @@
 
                 <div style="margin-bottom: 20px;">
                     <label class="text-muted" style="font-size: 12px; display: block; margin-bottom: 8px;">Revenus Estimés
-                        (FCFA)</label>
+                        ({{ auth()->user()->currency }})</label>
                     <input type="number" name="estimated_revenue" required placeholder="0"
                         style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                 </div>
 
                 <div style="margin-bottom: 25px;">
                     <label class="text-muted" style="font-size: 12px; display: block; margin-bottom: 8px;">Dépenses Estimées
-                        (FCFA)</label>
+                        ({{ auth()->user()->currency }})</label>
                     <input type="number" name="estimated_expenses" required placeholder="0"
                         style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                 </div>

@@ -18,7 +18,7 @@
 
                 <div style="margin-bottom: 20px;">
                     <label class="text-muted" style="font-size: 12px; display: block; margin-bottom: 8px;">Montant dû
-                        (€)</label>
+                        ({{ auth()->user()->currency }})</label>
                     <input type="number" step="0.01" name="amount" required placeholder="0.00"
                         style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                 </div>

@@ -35,7 +35,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 
 // Temp Login Route for testing
 Route::get('/login-test', function () {
-    $user = User::where('email', 'user@manage.com')->first();
+    $user = User::where('email', '=', 'user@manage.com')->first();
     Auth::login($user);
     return redirect()->route('home');
 });
@@ -59,12 +59,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Transactions (Unified view)
     Route::get('/transactions', function () {
-        $revenues = \App\Models\Revenue::where('user_id', auth()->id())->get();
-        $expenses = \App\Models\Expense::where('user_id', auth()->id())->get();
+        $revenues = \App\Models\Revenue::where('user_id', '=', auth()->id())->get();
+        $expenses = \App\Models\Expense::where('user_id', '=', auth()->id())->get();
         return view('mobile.transactions', compact('revenues', 'expenses'));
     })->name('transactions');
 
     Route::get('/settings', [HomeController::class, 'settings'])->name('settings');
+    Route::post('/settings', [HomeController::class, 'updateSettings'])->name('settings.update');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

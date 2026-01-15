@@ -35,7 +35,7 @@
                             <span class="text-muted" style="font-size: 12px;">Solde Projeté</span>
                             <span class="text-bold"
                                 style="color: var(--primary-green);">{{ number_format($forecast->estimated_revenue - $forecast->estimated_expenses, 0, ',', ' ') }}
-                                FCFA</span>
+                                {{ auth()->user()->currency }}</span>
                         </div>
                     </div>
                 @endforeach

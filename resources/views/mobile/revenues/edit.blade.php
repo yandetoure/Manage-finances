@@ -18,7 +18,7 @@
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <label class="text-muted" style="font-size: 12px; display: block; margin-bottom: 8px;">Montant (FCFA)</label>
+                    <label class="text-muted" style="font-size: 12px; display: block; margin-bottom: 8px;">Montant ({{ auth()->user()->currency }})</label>
                     <input type="number" name="amount" value="{{ $revenue->amount }}" required
                         style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                 </div>

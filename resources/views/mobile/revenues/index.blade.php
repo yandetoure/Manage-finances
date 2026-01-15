@@ -15,7 +15,8 @@
                     <p class="text-muted" style="font-size: 12px;">{{ $revenue->due_date ?? 'Pas de date' }}</p>
                 </div>
                 <div style="text-align: right;">
-                    <p class="text-bold text-green">+ {{ number_format($revenue->amount, 2, ',', ' ') }} €</p>
+                    <p class="text-bold text-green">+ {{ number_format($revenue->amount, 0, ',', ' ') }}
+                        {{ auth()->user()->currency }}</p>
                     @if($revenue->is_recurrent)
                         <span
                             style="font-size: 10px; background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); padding: 2px 6px; border-radius: 10px;">Récurrent</span>

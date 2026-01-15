@@ -9,6 +9,14 @@
     --nav-height: 70px;
 }
 
+body.light-mode {
+    --bg-color: #F8FAFC;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --text-main: #1E293B;
+    --text-muted: #64748B;
+    --accent-blue: #2563EB;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -95,12 +103,29 @@ body {
 }
 
 /* Typography Utilities */
-.text-lg { font-size: 1.25rem; }
-.text-2xl { font-size: 1.5rem; }
-.text-bold { font-weight: 700; }
-.text-muted { color: var(--text-muted); }
-.text-green { color: var(--primary-green); }
-.text-blue { color: var(--accent-blue); }
+.text-lg {
+    font-size: 1.25rem;
+}
+
+.text-2xl {
+    font-size: 1.5rem;
+}
+
+.text-bold {
+    font-weight: 700;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.text-green {
+    color: var(--primary-green);
+}
+
+.text-blue {
+    color: var(--accent-blue);
+}
 
 /* Animation Classes */
 .fade-in {
@@ -108,6 +133,13 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

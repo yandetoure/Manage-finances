@@ -54,6 +54,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(ModuleSetting::class);
     }
+    public function settings()
+    {
+        return $this->hasOne(UserSetting::class);
+    }
+
+    public function getCurrencyAttribute()
+    {
+        return $this->settings->currency ?? 'FCFA';
+    }
 
     /**
      * The attributes that should be hidden for serialization.

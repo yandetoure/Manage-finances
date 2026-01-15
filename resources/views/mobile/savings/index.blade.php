@@ -2,20 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-        menuOpen: false, 
-        activeSaving: null, 
-        contributionOpen: false,
-        historyOpen: false,
-        openMenu(saving) {
-            this.activeSaving = saving;
-            this.menuOpen = true;
-            this.historyOpen = false;
-        },
-        closeMenu() {
-            this.menuOpen = false;
-            this.contributionOpen = false;
-        }
-    }">
+                menuOpen: false, 
+                activeSaving: null, 
+                contributionOpen: false,
+                historyOpen: false,
+                openMenu(saving) {
+                    this.activeSaving = saving;
+                    this.menuOpen = true;
+                    this.historyOpen = false;
+                },
+                closeMenu() {
+                    this.menuOpen = false;
+                    this.contributionOpen = false;
+                }
+            }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Mon Épargne</h2>
             <a href="{{ route('savings.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
@@ -57,13 +57,13 @@
                         <div>
                             <span
                                 style="font-size: 15px; color: #10b981; font-weight: 700;">{{ number_format($saving->contributions->sum('amount'), 0, ',', ' ') }}
-                                FCFA</span>
+                                {{ auth()->user()->currency }}</span>
                             <p class="text-muted" style="font-size: 9px; margin-top: -2px;">Total épargné</p>
                         </div>
                         <div style="text-align: right;">
                             <span style="font-size: 11px; color: var(--text-muted);">Reste:
                                 {{ number_format($saving->target_amount - $saving->contributions->sum('amount'), 0, ',', ' ') }}
-                                FCFA</span>
+                                {{ auth()->user()->currency }}</span>
                         </div>
                     </div>
                 </div>
@@ -90,10 +90,11 @@
                         <h3 class="text-bold" style="font-size: 22px; margin-bottom: 5px;"
                             x-text="activeSaving.target_name"></h3>
                         <p style="color: #10b981; font-weight: 700; font-size: 18px;"
-                            x-text="new Intl.NumberFormat().format(activeSaving.current_amount) + ' FCFA'"></p>
+                            x-text="new Intl.NumberFormat().format(activeSaving.current_amount) + ' {{ auth()->user()->currency }}'">
+                        </p>
                         <p class="text-muted" style="font-size: 13px; margin-top: 5px;">
                             Reste à épargner: <span style="color: #3b82f6; font-weight: 600;"
-                                x-text="new Intl.NumberFormat().format(activeSaving.target_amount - activeSaving.current_amount) + ' FCFA'"></span>
+                                x-text="new Intl.NumberFormat().format(activeSaving.target_amount - activeSaving.current_amount) + ' {{ auth()->user()->currency }}'"></span>
                         </p>
                     </div>
 
@@ -129,7 +130,8 @@
                                         style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);">
                                         <div>
                                             <p class="text-bold" style="font-size: 14px;"
-                                                x-text="new Intl.NumberFormat().format(contribution.amount) + ' FCFA'"></p>
+                                                x-text="new Intl.NumberFormat().format(contribution.amount) + ' {{ auth()->user()->currency }}'">
+                                            </p>
                                             <p class="text-muted" style="font-size: 11px;"
                                                 x-text="new Date(contribution.contribution_date).toLocaleDateString('fr-FR', {day: 'numeric', month: 'long', year: 'numeric'})">
                                             </p>
@@ -167,7 +169,8 @@
                         <label class="text-muted"
                             style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Montant</label>
                         <input type="number" name="amount" required step="0.01" class="input-modern"
-                            style="width: 100%; font-size: 16px; font-weight: 600;" placeholder="0 FCFA">
+                            style="width: 100%; font-size: 16px; font-weight: 600;"
+                            placeholder="0 {{ auth()->user()->currency }}">
                     </div>
 
                     <div style="margin-bottom: 25px;">

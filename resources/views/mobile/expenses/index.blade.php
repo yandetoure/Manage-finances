@@ -23,7 +23,7 @@
                             </p>
                         </div>
                         <p class="text-bold" style="color: #ef4444;">
-                            -{{ number_format($expense->amount, 0, ',', ' ') }} FCFA
+                            -{{ number_format($expense->amount, 0, ',', ' ') }} {{ auth()->user()->currency }}
                         </p>
                     </div>
                 @endforeach

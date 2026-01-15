@@ -5,7 +5,8 @@
         <!-- Main Balance Card -->
         <div class="glass-card" style="background: linear-gradient(135deg, var(--accent-blue), #1e293b); border: none;">
             <p class="text-muted" style="color: rgba(255,255,255,0.7);">Solde Total</p>
-            <h2 class="text-bold" style="font-size: 32px; margin-top: 5px;">{{ number_format($balance, 2, ',', ' ') }} €
+            <h2 class="text-bold" style="font-size: 32px; margin-top: 5px;">{{ number_format($balance, 0, ',', ' ') }}
+                {{ auth()->user()->currency }}
             </h2>
             <div style="margin-top: 15px; display: flex; gap: 10px;">
                 <span class="text-green"
@@ -18,11 +19,13 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
             <div class="glass-card" style="margin-bottom: 0;">
                 <p class="text-muted" style="font-size: 12px;">Épargne</p>
-                <p class="text-bold text-blue">{{ number_format($totalSavings, 2, ',', ' ') }} €</p>
+                <p class="text-bold text-blue">{{ number_format($totalSavings, 0, ',', ' ') }}
+                    {{ auth()->user()->currency }}</p>
             </div>
             <div class="glass-card" style="margin-bottom: 0;">
                 <p class="text-muted" style="font-size: 12px;">Dettes</p>
-                <p class="text-bold text-green">{{ number_format($totalDebts, 2, ',', ' ') }} €</p>
+                <p class="text-bold text-green">{{ number_format($totalDebts, 0, ',', ' ') }} {{ auth()->user()->currency }}
+                </p>
             </div>
         </div>
 

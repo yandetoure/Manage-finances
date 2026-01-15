@@ -2,20 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-                menuOpen: false, 
-                activeDebt: null, 
-                repaymentOpen: false,
-                historyOpen: false,
-                openMenu(debt) {
-                    this.activeDebt = debt;
-                    this.menuOpen = true;
-                    this.historyOpen = false;
-                },
-                closeMenu() {
-                    this.menuOpen = false;
-                    this.repaymentOpen = false;
-                }
-            }">
+                        menuOpen: false, 
+                        activeDebt: null, 
+                        repaymentOpen: false,
+                        historyOpen: false,
+                        openMenu(debt) {
+                            this.activeDebt = debt;
+                            this.menuOpen = true;
+                            this.historyOpen = false;
+                        },
+                        closeMenu() {
+                            this.menuOpen = false;
+                            this.repaymentOpen = false;
+                        }
+                    }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Mes Dettes</h2>
             <a href="{{ route('debts.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
@@ -46,7 +46,8 @@
                     </div>
                     <div style="text-align: right;">
                         <p class="text-bold" style="color: #a855f7; font-size: 15px;">
-                            {{ number_format($debt->amount - $debt->payments->sum('amount'), 0, ',', ' ') }} FCFA
+                            {{ number_format($debt->amount - $debt->payments->sum('amount'), 0, ',', ' ') }}
+                            {{ auth()->user()->currency }}
                         </p>
                         <p class="text-muted" style="font-size: 9px; margin-top: -2px;">Reste à payer</p>
                         <span
@@ -78,7 +79,8 @@
                         <h3 class="text-bold" style="font-size: 22px; margin-bottom: 5px;" x-text="activeDebt.creditor">
                         </h3>
                         <p style="color: #a855f7; font-weight: 700; font-size: 18px;"
-                            x-text="new Intl.NumberFormat().format(activeDebt.amount) + ' FCFA'"></p>
+                            x-text="new Intl.NumberFormat().format(activeDebt.amount) + ' {{ auth()->user()->currency }}'">
+                        </p>
                     </div>
 
                     <!-- Status Selector -->
@@ -140,7 +142,8 @@
                                         style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);">
                                         <div>
                                             <p class="text-bold" style="font-size: 14px;"
-                                                x-text="new Intl.NumberFormat().format(payment.amount) + ' FCFA'"></p>
+                                                x-text="new Intl.NumberFormat().format(payment.amount) + ' {{ auth()->user()->currency }}'">
+                                            </p>
                                             <p class="text-muted" style="font-size: 11px;"
                                                 x-text="new Date(payment.payment_date).toLocaleDateString('fr-FR', {day: 'numeric', month: 'long', year: 'numeric'})">
                                             </p>
@@ -179,7 +182,8 @@
                             style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Montant
                             à payer</label>
                         <input type="number" name="amount" required step="0.01" class="input-modern"
-                            style="width: 100%; font-size: 16px; font-weight: 600;" placeholder="0 FCFA">
+                            style="width: 100%; font-size: 16px; font-weight: 600;"
+                            placeholder="0 {{ auth()->user()->currency }}">
                     </div>
 
                     <div style="margin-bottom: 25px;">

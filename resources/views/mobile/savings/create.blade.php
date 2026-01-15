@@ -20,7 +20,7 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                     <div>
                         <label class="text-muted" style="font-size: 12px; display: block; margin-bottom: 8px;">Objectif
-                            (FCFA)</label>
+                            ({{ auth()->user()->currency }})</label>
                         <input type="number" name="target_amount" required placeholder="0"
                             style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                     </div>

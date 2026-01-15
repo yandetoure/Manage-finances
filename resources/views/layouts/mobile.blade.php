@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ auth()->user()->settings->language ?? 'fr' }}">
 
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,8 @@
     </style>
 </head>
 
-<body x-data="{ activeTab: 'home' }">
+<body x-data="{ activeTab: 'home' }"
+    class="{{ (auth()->user()->settings->theme ?? 'dark') == 'light' ? 'light-mode' : '' }}">
     <header style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
         <div>
             <h1 class="text-2xl text-bold">Manage</h1>

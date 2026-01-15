@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <p class="text-bold" style="color: {{ $item->type == 'revenue' ? 'var(--primary-green)' : '#ef4444' }};">
-                        {{ $item->type == 'revenue' ? '+' : '-' }}{{ number_format($item->amount, 0, ',', ' ') }} FCFA
+                        {{ $item->type == 'revenue' ? '+' : '-' }}{{ number_format($item->amount, 0, ',', ' ') }} {{ auth()->user()->currency }}
                     </p>
                 </div>
             @endforeach
