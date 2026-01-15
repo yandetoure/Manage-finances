@@ -2,20 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-            menuOpen: false, 
-            activeDebt: null, 
-            repaymentOpen: false,
-            historyOpen: false,
-            openMenu(debt) {
-                this.activeDebt = debt;
-                this.menuOpen = true;
-                this.historyOpen = false;
-            },
-            closeMenu() {
-                this.menuOpen = false;
-                this.repaymentOpen = false;
-            }
-        }">
+                menuOpen: false, 
+                activeDebt: null, 
+                repaymentOpen: false,
+                historyOpen: false,
+                openMenu(debt) {
+                    this.activeDebt = debt;
+                    this.menuOpen = true;
+                    this.historyOpen = false;
+                },
+                closeMenu() {
+                    this.menuOpen = false;
+                    this.repaymentOpen = false;
+                }
+            }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Mes Dettes</h2>
             <a href="{{ route('debts.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
@@ -46,10 +46,11 @@
                     </div>
                     <div style="text-align: right;">
                         <p class="text-bold" style="color: #a855f7; font-size: 15px;">
-                            {{ number_format($debt->amount, 0, ',', ' ') }} FCFA
+                            {{ number_format($debt->amount - $debt->payments->sum('amount'), 0, ',', ' ') }} FCFA
                         </p>
+                        <p class="text-muted" style="font-size: 9px; margin-top: -2px;">Reste à payer</p>
                         <span
-                            style="font-size: 10px; background: {{ $debt->status == 'paid' ? 'rgba(16, 185, 129, 0.15)' : ($debt->status == 'late' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)') }}; color: {{ $debt->status == 'paid' ? '#10b981' : ($debt->status == 'late' ? '#ef4444' : '#f59e0b') }}; padding: 3px 8px; border-radius: 8px; font-weight: 600;">
+                            style="font-size: 10px; background: {{ $debt->status == 'paid' ? 'rgba(16, 185, 129, 0.15)' : ($debt->status == 'late' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)') }}; color: {{ $debt->status == 'paid' ? '#10b981' : ($debt->status == 'late' ? '#ef4444' : '#f59e0b') }}; padding: 1px 6px; border-radius: 6px; font-weight: 600;">
                             {{ $debt->status == 'paid' ? 'Payée' : ($debt->status == 'late' ? 'En retard' : 'En attente') }}
                         </span>
                     </div>

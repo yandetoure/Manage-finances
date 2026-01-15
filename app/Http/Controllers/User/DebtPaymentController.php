@@ -20,7 +20,7 @@ class DebtPaymentController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        $debt = Debt::where('user_id', Auth::id())->findOrFail($validated['debt_id']);
+        $debt = Debt::where('user_id', '=', Auth::id())->findOrFail($validated['debt_id']);
 
         DebtPayment::create($validated);
 

@@ -54,11 +54,17 @@
                     </div>
 
                     <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                        <span
-                            style="font-size: 15px; color: #10b981; font-weight: 700;">{{ number_format($saving->current_amount, 0, ',', ' ') }}
-                            FCFA</span>
-                        <span style="font-size: 11px; color: var(--text-muted);">Cible:
-                            {{ number_format($saving->target_amount, 0, ',', ' ') }} FCFA</span>
+                        <div>
+                            <span
+                                style="font-size: 15px; color: #10b981; font-weight: 700;">{{ number_format($saving->contributions->sum('amount'), 0, ',', ' ') }}
+                                FCFA</span>
+                            <p class="text-muted" style="font-size: 9px; margin-top: -2px;">Total épargné</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 11px; color: var(--text-muted);">Reste:
+                                {{ number_format($saving->target_amount - $saving->contributions->sum('amount'), 0, ',', ' ') }}
+                                FCFA</span>
+                        </div>
                     </div>
                 </div>
             @empty

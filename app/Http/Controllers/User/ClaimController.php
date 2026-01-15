@@ -12,7 +12,7 @@ class ClaimController extends Controller
 {
     public function index()
     {
-        $claims = Claim::with('payments')->where('user_id', Auth::id())->orderBy('due_date', 'asc')->get();
+        $claims = Claim::with('payments')->where('user_id', '=', Auth::id())->orderBy('due_date', 'asc')->get();
         return view('mobile.claims.index', compact('claims'));
     }
 

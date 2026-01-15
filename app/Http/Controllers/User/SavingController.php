@@ -12,7 +12,7 @@ class SavingController extends Controller
 {
     public function index()
     {
-        $savings = Saving::with('contributions')->where('user_id', Auth::id())->get();
+        $savings = Saving::with('contributions')->where('user_id', '=', Auth::id())->get();
         return view('mobile.savings.index', compact('savings'));
     }
 
