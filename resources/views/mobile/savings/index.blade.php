@@ -2,14 +2,14 @@
 
 @section('content')
     <div x-data="{ 
-            menuOpen: false, 
-            activeSaving: null,
-            contributionOpen: false,
-            openMenu(savingId) {
-                this.activeSaving = savingId;
-                this.menuOpen = true;
-            }
-        }">
+                menuOpen: false, 
+                activeSaving: null,
+                contributionOpen: false,
+                openMenu(savingId) {
+                    this.activeSaving = savingId;
+                    this.menuOpen = true;
+                }
+            }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Épargne</h2>
             <a href="{{ route('savings.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
@@ -52,7 +52,7 @@
         <!-- Action Menu (Bottom Sheet) -->
         <div x-show="menuOpen" x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="translate-y-full" x-transition:enter-end="translate-y-0"
-            style="position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; border-top: 1px solid rgba(255,255,255,0.1); border-radius: 24px 24px 0 0; padding: 25px; z-index: 1000; box-shadow: 0 -10px 25px rgba(0,0,0,0.5);">
+            style="position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; border-top: 1px solid rgba(255,255,255,0.1); border-radius: 24px 24px 0 0; padding: 25px 25px 120px; z-index: 1000; box-shadow: 0 -10px 25px rgba(0,0,0,0.5);">
 
             <div
                 style="width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; margin: 0 auto 20px;">

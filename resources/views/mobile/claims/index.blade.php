@@ -44,7 +44,7 @@
 
         <!-- Action Menu (Bottom Sheet) -->
         <div x-show="menuOpen"
-            style="position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; border-top: 1px solid rgba(255,255,255,0.1); border-radius: 24px 24px 0 0; padding: 25px; z-index: 1000;">
+            style="position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; border-top: 1px solid rgba(255,255,255,0.1); border-radius: 24px 24px 0 0; padding: 25px 25px 120px; z-index: 1000;">
 
             <div
                 style="width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; margin: 0 auto 20px;">

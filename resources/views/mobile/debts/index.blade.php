@@ -2,20 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-        menuOpen: false, 
-        activeDebt: null, 
-        repaymentOpen: false,
-        historyOpen: false,
-        openMenu(debt) {
-            this.activeDebt = debt;
-            this.menuOpen = true;
-            this.historyOpen = false;
-        },
-        closeMenu() {
-            this.menuOpen = false;
-            this.repaymentOpen = false;
-        }
-    }">
+            menuOpen: false, 
+            activeDebt: null, 
+            repaymentOpen: false,
+            historyOpen: false,
+            openMenu(debt) {
+                this.activeDebt = debt;
+                this.menuOpen = true;
+                this.historyOpen = false;
+            },
+            closeMenu() {
+                this.menuOpen = false;
+                this.repaymentOpen = false;
+            }
+        }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Mes Dettes</h2>
             <a href="{{ route('debts.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
@@ -46,7 +46,8 @@
                     </div>
                     <div style="text-align: right;">
                         <p class="text-bold" style="color: #a855f7; font-size: 15px;">
-                            {{ number_format($debt->amount, 0, ',', ' ') }} FCFA</p>
+                            {{ number_format($debt->amount, 0, ',', ' ') }} FCFA
+                        </p>
                         <span
                             style="font-size: 10px; background: {{ $debt->status == 'paid' ? 'rgba(16, 185, 129, 0.15)' : ($debt->status == 'late' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)') }}; color: {{ $debt->status == 'paid' ? '#10b981' : ($debt->status == 'late' ? '#ef4444' : '#f59e0b') }}; padding: 3px 8px; border-radius: 8px; font-weight: 600;">
                             {{ $debt->status == 'paid' ? 'Payée' : ($debt->status == 'late' ? 'En retard' : 'En attente') }}
@@ -65,7 +66,7 @@
             x-transition:leave="fade-out" style="display: none;"></div>
 
         <div x-show="menuOpen" class="bottom-sheet" x-transition:enter="slide-up" x-transition:leave="slide-down"
-            style="display: none; background: rgba(23, 23, 23, 0.98); backdrop-filter: blur(25px); border-top-left-radius: 35px; border-top-right-radius: 35px; padding: 25px 20px 40px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.12); height: auto; max-height: 85vh; overflow-y: auto;">
+            style="display: none; background: rgba(23, 23, 23, 0.98); backdrop-filter: blur(25px); border-top-left-radius: 35px; border-top-right-radius: 35px; padding: 25px 20px 120px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.12); height: auto; max-height: 85vh; overflow-y: auto;">
             <template x-if="activeDebt">
                 <div>
                     <div
