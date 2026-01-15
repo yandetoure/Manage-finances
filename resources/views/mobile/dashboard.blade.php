@@ -18,9 +18,10 @@
         <!-- Summary Grid -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
             <div class="glass-card" style="margin-bottom: 0;">
-                <p class="text-muted" style="font-size: 12px;">Épargne</p>
-                <p class="text-bold text-blue">{{ number_format($totalSavings, 0, ',', ' ') }}
-                    {{ auth()->user()->currency }}</p>
+                <p class="text-muted" style="font-size: 12px;">Créances</p>
+                <p class="text-bold text-blue">{{ number_format($totalClaims, 0, ',', ' ') }}
+                    {{ auth()->user()->currency }}
+                </p>
             </div>
             <div class="glass-card" style="margin-bottom: 0;">
                 <p class="text-muted" style="font-size: 12px;">Dettes</p>
@@ -56,6 +57,21 @@
                     style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
                     <span style="font-size: 24px; margin-bottom: 5px;">💸</span>
                     <span class="text-muted" style="font-size: 12px;">Rembourser</span>
+                </a>
+                <a href="{{ route('claims.create') }}" class="glass-card"
+                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                    <span style="font-size: 24px; margin-bottom: 5px;">💰</span>
+                    <span class="text-muted" style="font-size: 12px;">Prêter</span>
+                </a>
+                <a href="{{ route('savings.create') }}" class="glass-card"
+                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                    <span style="font-size: 24px; margin-bottom: 5px;">🏦</span>
+                    <span class="text-muted" style="font-size: 12px;">Épargner</span>
+                </a>
+                <a href="{{ route('forecasts.create') }}" class="glass-card"
+                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                    <span style="font-size: 24px; margin-bottom: 5px;">📊</span>
+                    <span class="text-muted" style="font-size: 12px;">Prévoir</span>
                 </a>
             </div>
         </div>

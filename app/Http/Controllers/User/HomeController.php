@@ -22,10 +22,11 @@ class HomeController extends Controller
         $totalExpenses = Expense::where('user_id', $user->id)->sum('amount');
         $totalDebts = Debt::where('user_id', $user->id)->where('status', 'pending')->sum('amount');
         $totalSavings = Saving::where('user_id', $user->id)->sum('current_amount');
+        $totalClaims = \App\Models\Claim::where('user_id', $user->id)->where('status', '!=', 'paid')->sum('amount');
 
         $balance = $totalRevenue - $totalExpenses;
 
-        return view('mobile.dashboard', compact('balance', 'totalDebts', 'totalSavings', 'totalRevenue', 'totalExpenses'));
+        return view('mobile.dashboard', compact('balance', 'totalDebts', 'totalSavings', 'totalRevenue', 'totalExpenses', 'totalClaims'));
     }
 
     public function settings()
