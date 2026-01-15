@@ -1,144 +1,256 @@
 @extends('layouts.mobile')
 
 @section('content')
-    <div x-data="{ 
-                menuOpen: false, 
-                activeSaving: null,
-                contributionOpen: false,
-                openMenu(savingId) {
-                    this.activeSaving = savingId;
-                    this.menuOpen = true;
-                }
-            }">
+    <div class="fade-in" x-data="{ 
+        menuOpen: false, 
+        activeSaving: null, 
+        contributionOpen: false,
+        historyOpen: false,
+        openMenu(saving) {
+            this.activeSaving = saving;
+            this.menuOpen = true;
+            this.historyOpen = false;
+        },
+        closeMenu() {
+            this.menuOpen = false;
+            this.contributionOpen = false;
+        }
+    }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 class="text-bold">Épargne</h2>
+            <h2 class="text-bold">Mon Épargne</h2>
             <a href="{{ route('savings.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
-                Nouveau Projet</a>
+                Nouveau</a>
         </div>
 
-        @if($savings->isEmpty())
-            <div class="glass-card" style="text-align: center; padding: 40px 20px;">
-                <p class="text-muted">Aucun projet d'épargne en cours.</p>
-            </div>
-        @else
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-                @foreach($savings as $saving)
-                    @php
-                        $percentage = min(100, ($saving->current_amount / $saving->target_amount) * 100);
-                    @endphp
-                    <div class="glass-card" style="padding: 20px; cursor: pointer;" @click="openMenu({{ $saving->id }})">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span class="text-bold">{{ $saving->target_name }}</span>
-                            <span class="text-muted" style="font-size: 12px;">{{ number_format($percentage, 0) }}%</span>
-                        </div>
-                        <div
-                            style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-bottom: 10px;">
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            @forelse($savings as $saving)
+                @php
+                    $percentage = min(100, ($saving->current_amount / $saving->target_amount) * 100);
+                @endphp
+                <div class="glass-card" @click="openMenu({{ Js::from($saving) }})"
+                    style="padding: 20px; cursor: pointer; transition: transform 0.2s;"
+                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
                             <div
-                                style="width: {{ $percentage }}%; height: 100%; background: linear-gradient(to right, var(--accent-blue), var(--primary-green));">
+                                style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 12H5" />
+                                    <path d="M12 19V5" />
+                                </svg>
                             </div>
+                            <span class="text-bold" style="font-size: 15px;">{{ $saving->target_name }}</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                            <span
-                                style="font-size: 14px; color: var(--primary-green); font-weight: bold;">{{ number_format($saving->current_amount, 0, ',', ' ') }}
-                                FCFA</span>
-                            <span style="font-size: 11px; color: var(--text-muted);">Objectif :
-                                {{ number_format($saving->target_amount, 0, ',', ' ') }} FCFA</span>
+                        <span
+                            style="font-size: 11px; font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 6px;">{{ number_format($percentage, 0) }}%</span>
+                    </div>
+
+                    <div
+                        style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div
+                            style="width: {{ $percentage }}%; height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 10px; transition: width 0.5s ease-out;">
                         </div>
                     </div>
-                @endforeach
-            </div>
-        @endif
+
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <span
+                            style="font-size: 15px; color: #10b981; font-weight: 700;">{{ number_format($saving->current_amount, 0, ',', ' ') }}
+                            FCFA</span>
+                        <span style="font-size: 11px; color: var(--text-muted);">Cible:
+                            {{ number_format($saving->target_amount, 0, ',', ' ') }} FCFA</span>
+                    </div>
+                </div>
+            @empty
+                <div class="glass-card" style="text-align: center; padding: 40px 20px;">
+                    <p class="text-muted">Aucun projet d'épargne en cours.</p>
+                </div>
+            @endforelse
+        </div>
 
         <!-- Action Menu (Bottom Sheet) -->
-        <div x-show="menuOpen" x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="translate-y-full" x-transition:enter-end="translate-y-0"
-            style="position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; border-top: 1px solid rgba(255,255,255,0.1); border-radius: 24px 24px 0 0; padding: 25px 25px 120px; z-index: 1000; box-shadow: 0 -10px 25px rgba(0,0,0,0.5);">
+        <div x-show="menuOpen" class="overlay" @click="closeMenu()" x-transition:enter="fade-in"
+            x-transition:leave="fade-out" style="display: none;"></div>
 
-            <div
-                style="width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; margin: 0 auto 20px;">
-            </div>
-
+        <div x-show="menuOpen" class="bottom-sheet" x-transition:enter="slide-up" x-transition:leave="slide-down"
+            style="display: none; background: rgba(23, 23, 23, 0.98); backdrop-filter: blur(25px); border-top-left-radius: 35px; border-top-right-radius: 35px; padding: 25px 20px 120px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.12); height: auto; max-height: 85vh; overflow-y: auto;">
             <template x-if="activeSaving">
                 <div>
-                    <h3 class="text-bold" style="margin-bottom: 20px;">Actions</h3>
+                    <div
+                        style="width: 40px; height: 5px; background: rgba(255,255,255,0.25); border-radius: 3px; margin: 0 auto 20px;">
+                    </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <button @click="contributionOpen = true; menuOpen = false" class="btn btn-accent"
-                            style="width: 100%; background: var(--primary-green);">💰 Ajouter une épargne</button>
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <h3 class="text-bold" style="font-size: 22px; margin-bottom: 5px;"
+                            x-text="activeSaving.target_name"></h3>
+                        <p style="color: #10b981; font-weight: 700; font-size: 18px;"
+                            x-text="new Intl.NumberFormat().format(activeSaving.current_amount) + ' FCFA'"></p>
+                        <p class="text-muted" style="font-size: 13px; margin-top: 5px;">
+                            Reste à épargner: <span style="color: #3b82f6; font-weight: 600;"
+                                x-text="new Intl.NumberFormat().format(activeSaving.target_amount - activeSaving.current_amount) + ' FCFA'"></span>
+                        </p>
+                    </div>
 
-                        <!-- History Section Toggle -->
-                        <div x-data="{ historyOpen: false }">
-                            <button @click="historyOpen = !historyOpen" class="btn btn-secondary-outline"
-                                style="width: 100%; text-align: left; padding: 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; display: flex; justify-content: space-between; align-items: center;">
-                                <span>📜 Historique des économies</span>
-                                <span x-text="historyOpen ? '▲' : '▼'"></span>
-                            </button>
+                    <!-- Main Actions Grid -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px;">
+                        <button @click="contributionOpen = true" class="action-card"
+                            style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); grid-column: span 2;">
+                            <span style="font-size: 20px; margin-bottom: 5px; display: block;">💰</span>
+                            <span style="font-weight: 600; color: #10b981;">Épargner</span>
+                        </button>
 
-                            <div x-show="historyOpen"
-                                style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 12px; max-height: 200px; overflow-y: auto;">
-                                <template x-for="saving in {{ $savings->toJson() }}">
-                                    <template x-if="saving.id == activeSaving">
+                        <button @click="historyOpen = !historyOpen" class="action-card"
+                            :style="historyOpen ? 'background: rgba(255,255,255,0.15);' : ''">
+                            <span style="font-size: 20px; margin-bottom: 5px; display: block;">📜</span>
+                            <span style="font-weight: 600;">Historique</span>
+                        </button>
+
+                        <a :href="'/savings/' + activeSaving.id + '/edit'" class="action-card"
+                            style="text-decoration: none; color: white;">
+                            <span style="font-size: 20px; margin-bottom: 5px; display: block;">✏️</span>
+                            <span style="font-weight: 600;">Modifier</span>
+                        </a>
+                    </div>
+
+                    <!-- History Section -->
+                    <div x-show="historyOpen" x-transition:enter="fade-in"
+                        style="background: rgba(255,255,255,0.03); border-radius: 20px; padding: 20px; margin-top: 10px;">
+                        <h4 class="text-bold" style="font-size: 15px; margin-bottom: 15px;">Historique des économies</h4>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <template x-if="activeSaving.contributions && activeSaving.contributions.length > 0">
+                                <template x-for="contribution in activeSaving.contributions" :key="contribution.id">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);">
                                         <div>
-                                            <template x-if="saving.contributions.length === 0">
-                                                <p class="text-muted" style="font-size: 11px; text-align: center;">Aucune
-                                                    économie.</p>
-                                            </template>
-                                            <template x-for="contribution in saving.contributions">
-                                                <div
-                                                    style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 8px 0;">
-                                                    <span style="font-size: 11px; color: var(--text-muted);"
-                                                        x-text="contribution.contribution_date"></span>
-                                                    <span
-                                                        style="font-size: 11px; font-weight: bold; color: var(--primary-green);"
-                                                        x-text="'+' + new Intl.NumberFormat().format(contribution.amount) + ' FCFA'"></span>
-                                                </div>
-                                            </template>
+                                            <p class="text-bold" style="font-size: 14px;"
+                                                x-text="new Intl.NumberFormat().format(contribution.amount) + ' FCFA'"></p>
+                                            <p class="text-muted" style="font-size: 11px;"
+                                                x-text="new Date(contribution.contribution_date).toLocaleDateString('fr-FR', {day: 'numeric', month: 'long', year: 'numeric'})">
+                                            </p>
                                         </div>
-                                    </template>
+                                        <span
+                                            style="font-size: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 2px 8px; border-radius: 20px;">Ajouté</span>
+                                    </div>
                                 </template>
-                            </div>
+                            </template>
+                            <template x-if="!activeSaving.contributions || activeSaving.contributions.length === 0">
+                                <div style="text-align: center; padding: 20px;">
+                                    <p class="text-muted" style="font-size: 13px;">Aucune économie trouvée</p>
+                                </div>
+                            </template>
                         </div>
-
-                        <a :href="'/savings/' + activeSaving + '/edit'" class="btn btn-secondary-outline"
-                            style="width: 100%; text-align: center; text-decoration: none; display: block; padding: 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff;">✏️
-                            Modifier le projet</a>
-                        <button @click="menuOpen = false" class="btn" style="width: 100%; border: none;">Annuler</button>
                     </div>
                 </div>
             </template>
         </div>
 
         <!-- Contribution Modal -->
-        <div x-show="contributionOpen" class="fade-in"
-            style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1001; display: flex; align-items: center; justify-content: center; padding: 20px;">
-            <div class="glass-card" style="max-width: 400px; width: 100%;">
-                <h3 class="text-bold" style="margin-bottom: 20px;">Épargner pour ce projet</h3>
+        <div x-show="contributionOpen" class="overlay" style="z-index: 1001; background: rgba(0,0,0,0.85); display: none;"
+            x-transition:enter="fade-in" x-transition:leave="fade-out">
+            <div class="glass-card" @click.stop
+                style="max-width: 90%; width: 350px; margin: auto; padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15);">
+                <h3 class="text-bold" style="margin-bottom: 5px; font-size: 18px;">Ajouter à l'épargne</h3>
+                <p class="text-muted" style="font-size: 12px; margin-bottom: 25px;">Économisez pour <span
+                        x-text="activeSaving?.target_name" style="color: white; font-weight: 600;"></span></p>
+
                 <form action="{{ route('savings.contribute') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="saving_id" :value="activeSaving">
-                    <div style="margin-bottom: 15px;">
-                        <label class="text-muted" style="font-size: 12px; display: block; margin-bottom: 5px;">Montant à
-                            ajouter</label>
-                        <input type="number" name="amount" required class="form-input"
-                            style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px;">
+                    <input type="hidden" name="saving_id" :value="activeSaving?.id">
+
+                    <div style="margin-bottom: 18px;">
+                        <label class="text-muted"
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Montant</label>
+                        <input type="number" name="amount" required step="0.01" class="input-modern"
+                            style="width: 100%; font-size: 16px; font-weight: 600;" placeholder="0 FCFA">
                     </div>
-                    <div style="margin-bottom: 20px;">
-                        <label class="text-muted" style="font-size: 12px; display: block; margin-bottom: 5px;">Date</label>
-                        <input type="date" name="contribution_date" required value="{{ date('Y-m-d') }}" class="form-input"
-                            style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px;">
+
+                    <div style="margin-bottom: 25px;">
+                        <label class="text-muted"
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Date</label>
+                        <input type="date" name="contribution_date" required value="{{ date('Y-m-d') }}"
+                            class="input-modern" style="width: 100%;">
                     </div>
-                    <div style="display: flex; gap: 10px;">
+
+                    <div style="display: flex; gap: 12px;">
                         <button type="button" @click="contributionOpen = false" class="btn"
-                            style="flex: 1; background: rgba(255,255,255,0.1);">Annuler</button>
+                            style="flex: 1; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 12px;">Annuler</button>
                         <button type="submit" class="btn btn-accent"
-                            style="flex: 2; background: var(--primary-green);">Valider</button>
+                            style="flex: 1; justify-content: center; border-radius: 12px; background: #10b981;">Confirmer</button>
                     </div>
                 </form>
             </div>
         </div>
-
-        <!-- Overlay -->
-        <div x-show="menuOpen" @click="menuOpen = false"
-            style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999;"></div>
     </div>
+
+    <style>
+        .action-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-card:active {
+            transform: scale(0.95);
+        }
+
+        .input-modern {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 14px;
+            color: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-modern:focus {
+            border-color: #10b981;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .slide-up {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+    </style>
 @endsection

@@ -9,6 +9,7 @@ use App\Http\Controllers\User\SavingController;
 use App\Http\Controllers\User\ForecastController;
 use App\Http\Controllers\User\DebtPaymentController;
 use App\Http\Controllers\User\SavingContributionController;
+use App\Http\Controllers\User\ClaimPaymentController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\UserController as AdminUser;
 use App\Http\Controllers\Admin\ModuleController as AdminModule;
@@ -52,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('debts/pay', [DebtPaymentController::class, 'store'])->name('debts.pay');
     Route::post('debts/{debt}/status', [DebtController::class, 'updateStatus'])->name('debts.update-status');
+    Route::post('claims/pay', [ClaimPaymentController::class, 'store'])->name('claims.pay');
+    Route::post('claims/{claim}/status', [ClaimController::class, 'updateStatus'])->name('claims.update-status');
     Route::post('claims/{claim}/toggle-paid', [ClaimController::class, 'togglePaid'])->name('claims.toggle-paid');
 
     // Transactions (Unified view)

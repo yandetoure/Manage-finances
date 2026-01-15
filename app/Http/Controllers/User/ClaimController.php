@@ -12,8 +12,21 @@ class ClaimController extends Controller
 {
     public function index()
     {
-        $claims = Claim::where('user_id', Auth::id())->orderBy('due_date', 'asc')->get();
+        $claims = Claim::with('payments')->where('user_id', Auth::id())->orderBy('due_date', 'asc')->get();
         return view('mobile.claims.index', compact('claims'));
+    }
+
+    public function updateStatus(Request $request, string $id)
+    {
+        $claim = Claim::where('user_id', Auth::id())->findOrFail($id);
+
+        $validated = $request->validate([
+            'status' => 'required|in:pending,paid,late',
+        ]);
+
+        $claim->update(['status' => $validated['status']]);
+
+        return back()->with('success', 'Statut de la créance mis à jour !');
     }
 
     public function create()
