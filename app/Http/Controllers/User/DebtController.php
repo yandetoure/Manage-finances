@@ -66,4 +66,17 @@ class DebtController extends Controller
 
         return redirect()->route('debts.index')->with('success', 'Dette supprimée !');
     }
+
+    public function updateStatus(Request $request, string $id)
+    {
+        $debt = Debt::where('user_id', Auth::id())->findOrFail($id);
+
+        $validated = $request->validate([
+            'status' => 'required|in:pending,paid,late',
+        ]);
+
+        $debt->update(['status' => $validated['status']]);
+
+        return back()->with('success', 'Statut de la dette mis à jour !');
+    }
 }

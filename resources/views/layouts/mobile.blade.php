@@ -40,6 +40,20 @@
     </header>
 
     <main style="padding: 0 20px;">
+        @if (session('success'))
+            <div class="fade-in"
+                style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                ✅ {{ session('success') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="fade-in"
+                style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                ❌ {{ $errors->first() }}
+            </div>
+        @endif
+
         @yield('content')
     </main>
 

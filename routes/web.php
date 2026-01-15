@@ -50,8 +50,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('savings/contribute', [SavingContributionController::class, 'store'])->name('savings.contribute');
     Route::resource('forecasts', ForecastController::class)->middleware('module.active:forecasts');
 
-    // Payments & Actions
     Route::post('debts/pay', [DebtPaymentController::class, 'store'])->name('debts.pay');
+    Route::post('debts/{debt}/status', [DebtController::class, 'updateStatus'])->name('debts.update-status');
     Route::post('claims/{claim}/toggle-paid', [ClaimController::class, 'togglePaid'])->name('claims.toggle-paid');
 
     // Transactions (Unified view)
