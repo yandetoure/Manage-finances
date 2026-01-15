@@ -8,16 +8,24 @@
             @csrf
 
             <!-- Profil Section -->
-            <div class="glass-card" style="margin-bottom: 20px;">
-                <h3 class="text-bold" style="font-size: 16px; margin-bottom: 15px;">Profil</h3>
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                    <div
-                        style="width: 60px; height: 60px; border-radius: 50%; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold;">
-                        {{ substr(auth()->user()->name, 0, 1) }}
-                    </div>
+            <div class="glass-card" style="margin-bottom: 20px; padding: 20px;">
+                <h3 class="text-bold" style="font-size: 16px; margin-bottom: 20px;">Profil</h3>
+
+                <div style="display: flex; flex-direction: column; gap: 15px;">
                     <div>
-                        <p class="text-bold">{{ auth()->user()->name }}</p>
-                        <p class="text-muted" style="font-size: 12px;">{{ auth()->user()->email }}</p>
+                        <label class="text-muted"
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Nom
+                            complet</label>
+                        <input type="text" name="name" value="{{ auth()->user()->name }}" class="input-modern"
+                            style="width: 100%;" required>
+                    </div>
+
+                    <div>
+                        <label class="text-muted"
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Adresse
+                            Email</label>
+                        <input type="email" name="email" value="{{ auth()->user()->email }}" class="input-modern"
+                            style="width: 100%;" required>
                     </div>
                 </div>
             </div>

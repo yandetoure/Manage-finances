@@ -36,18 +36,28 @@ class HomeController extends Controller
 
     public function updateSettings(Request $request)
     {
+        $user = Auth::user();
+
         $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'currency' => 'required|string',
             'language' => 'required|string',
             'notifications_enabled' => 'nullable|boolean',
             'theme' => 'required|string|in:dark,light',
         ]);
 
-        $settings = Auth::user()->settings;
+        // Update User Profile
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->save();
+
+        // Update User Settings
+        $settings = $user->settings;
 
         if (!$settings) {
             $settings = new UserSetting();
-            $settings->user_id = Auth::id();
+            $settings->user_id = $user->id;
         }
 
         $settings->currency = $validated['currency'];
@@ -56,6 +66,6 @@ class HomeController extends Controller
         $settings->notifications_enabled = $request->has('notifications_enabled');
         $settings->save();
 
-        return back()->with('success', 'Paramètres mis à jour !');
+        return back()->with('success', 'Profil et paramètres mis à jour !');
     }
 }
