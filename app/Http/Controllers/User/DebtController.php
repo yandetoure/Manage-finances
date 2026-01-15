@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Models\Debt;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +11,7 @@ class DebtController extends Controller
 {
     public function index()
     {
-        $debts = Debt::where('user_id', Auth::id())->orderBy('due_date', 'asc')->get();
+        $debts = Debt::with('payments')->where('user_id', Auth::id())->orderBy('due_date', 'asc')->get();
         return view('mobile.debts.index', compact('debts'));
     }
 
@@ -37,35 +36,34 @@ class DebtController extends Controller
         return redirect()->route('debts.index')->with('success', 'Dette ajoutée !');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        $debt = Debt::where('user_id', Auth::id())->findOrFail($id);
+        return view('mobile.debts.edit', compact('debt'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        $debt = Debt::where('user_id', Auth::id())->findOrFail($id);
+
+        $validated = $request->validate([
+            'amount' => 'required|numeric',
+            'creditor' => 'required|string',
+            'description' => 'nullable|string',
+            'due_date' => 'nullable|date',
+            'status' => 'required|in:pending,paid,late',
+        ]);
+
+        $debt->update($validated);
+
+        return redirect()->route('debts.index')->with('success', 'Dette mise à jour !');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        $debt = Debt::where('user_id', Auth::id())->findOrFail($id);
+        $debt->delete();
+
+        return redirect()->route('debts.index')->with('success', 'Dette supprimée !');
     }
 }

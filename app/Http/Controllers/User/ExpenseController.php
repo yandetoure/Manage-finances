@@ -4,62 +4,68 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Expense;
+use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $expenses = Expense::where('user_id', Auth::id())->orderBy('date', 'desc')->get();
+        return view('mobile.expenses.index', compact('expenses'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('mobile.expenses.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'amount' => 'required|numeric',
+            'category' => 'required|string',
+            'description' => 'nullable|string',
+            'is_recurrent' => 'boolean',
+            'frequency' => 'nullable|string',
+            'date' => 'required|date',
+        ]);
+
+        $validated['user_id'] = Auth::id();
+        Expense::create($validated);
+
+        return redirect()->route('expenses.index')->with('success', 'Dépense ajoutée !');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        $expense = Expense::where('user_id', Auth::id())->findOrFail($id);
+        return view('mobile.expenses.edit', compact('expense'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        $expense = Expense::where('user_id', Auth::id())->findOrFail($id);
+
+        $validated = $request->validate([
+            'amount' => 'required|numeric',
+            'category' => 'required|string',
+            'description' => 'nullable|string',
+            'is_recurrent' => 'boolean',
+            'frequency' => 'nullable|string',
+            'date' => 'required|date',
+        ]);
+
+        $expense->update($validated);
+
+        return redirect()->route('expenses.index')->with('success', 'Dépense mise à jour !');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        $expense = Expense::where('user_id', Auth::id())->findOrFail($id);
+        $expense->delete();
+
+        return redirect()->route('expenses.index')->with('success', 'Dépense supprimée !');
     }
 }
