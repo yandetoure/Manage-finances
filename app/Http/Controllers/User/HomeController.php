@@ -26,4 +26,9 @@ class HomeController extends Controller
 
         return view('mobile.dashboard', compact('balance', 'totalDebts', 'totalSavings', 'totalRevenue', 'totalExpenses'));
     }
+
+    public function settings()
+    {
+        return view('mobile.settings');
+    }
 }

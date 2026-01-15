@@ -9,7 +9,14 @@ class Claim extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'debtor',
+        'amount',
+        'description',
+        'status',
+        'due_date',
+    ];
 
     public function user()
     {

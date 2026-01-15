@@ -9,7 +9,12 @@ class DebtPayment extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'debt_id',
+        'amount',
+        'payment_date',
+        'note',
+    ];
 
     public function debt()
     {

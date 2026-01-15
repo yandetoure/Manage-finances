@@ -4,6 +4,11 @@ use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\RevenueController;
 use App\Http\Controllers\User\ExpenseController;
 use App\Http\Controllers\User\DebtController;
+use App\Http\Controllers\User\ClaimController;
+use App\Http\Controllers\User\SavingController;
+use App\Http\Controllers\User\ForecastController;
+use App\Http\Controllers\User\DebtPaymentController;
+use App\Http\Controllers\User\SavingContributionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\UserController as AdminUser;
 use App\Http\Controllers\Admin\ModuleController as AdminModule;
@@ -40,10 +45,23 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('revenues', RevenueController::class)->middleware('module.active:revenues');
     Route::resource('expenses', ExpenseController::class)->middleware('module.active:expenses');
     Route::resource('debts', DebtController::class)->middleware('module.active:debts');
+    Route::resource('claims', ClaimController::class)->middleware('module.active:claims');
+    Route::resource('savings', SavingController::class)->middleware('module.active:savings');
+    Route::post('savings/contribute', [SavingContributionController::class, 'store'])->name('savings.contribute');
+    Route::resource('forecasts', ForecastController::class)->middleware('module.active:forecasts');
 
-    Route::get('/settings', function () {
-        return view('mobile.settings');
-    })->name('settings');
+    // Payments & Actions
+    Route::post('debts/pay', [DebtPaymentController::class, 'store'])->name('debts.pay');
+    Route::post('claims/{claim}/toggle-paid', [ClaimController::class, 'togglePaid'])->name('claims.toggle-paid');
+
+    // Transactions (Unified view)
+    Route::get('/transactions', function () {
+        $revenues = \App\Models\Revenue::where('user_id', auth()->id())->get();
+        $expenses = \App\Models\Expense::where('user_id', auth()->id())->get();
+        return view('mobile.transactions', compact('revenues', 'expenses'));
+    })->name('transactions');
+
+    Route::get('/settings', [HomeController::class, 'settings'])->name('settings');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

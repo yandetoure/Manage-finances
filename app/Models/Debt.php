@@ -4,14 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\DebtPayment;
 
 class Debt extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'creditor',
+        'amount',
+        'description',
+        'status',
+        'due_date',
+    ];
 
     public function user()
     {

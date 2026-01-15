@@ -44,23 +44,19 @@
     </main>
 
     <nav class="bottom-nav">
-        <a href="{{ route('home') }}" class="nav-item" :class="{ 'active': activeTab === 'home' }"
-            @click="activeTab = 'home'">
+        <a href="{{ route('home') }}" class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
             <div class="nav-icon">🏠</div>
             <span>Accueil</span>
         </a>
-        <a href="{{ route('revenues.index') }}" class="nav-item" :class="{ 'active': activeTab === 'wallet' }"
-            @click="activeTab = 'wallet'">
+        <a href="{{ route('transactions') }}" class="nav-item {{ request()->routeIs('transactions') ? 'active' : '' }}">
+            <div class="nav-icon">📊</div>
+            <span>Transactions</span>
+        </a>
+        <a href="{{ route('savings.index') }}" class="nav-item {{ request()->routeIs('savings.*') ? 'active' : '' }}">
             <div class="nav-icon">💰</div>
-            <span>Finances</span>
+            <span>Épargne</span>
         </a>
-        <a href="{{ route('debts.index') }}" class="nav-item" :class="{ 'active': activeTab === 'stats' }"
-            @click="activeTab = 'stats'">
-            <div class="nav-icon">📈</div>
-            <span>Dettes</span>
-        </a>
-        <a href="{{ route('settings') }}" class="nav-item" :class="{ 'active': activeTab === 'settings' }"
-            @click="activeTab = 'settings'">
+        <a href="{{ route('settings') }}" class="nav-item {{ request()->routeIs('settings') ? 'active' : '' }}">
             <div class="nav-icon">⚙️</div>
             <span>Paramètres</span>
         </a>

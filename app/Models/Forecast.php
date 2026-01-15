@@ -9,7 +9,14 @@ class Forecast extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'month',
+        'year',
+        'estimated_revenue',
+        'estimated_expenses',
+        'notes',
+    ];
 
     public function user()
     {
