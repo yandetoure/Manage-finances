@@ -59,22 +59,44 @@
     </main>
 
     <nav class="bottom-nav">
-        <a href="{{ route('home') }}" class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
-            <div class="nav-icon">🏠</div>
-            <span>Accueil</span>
-        </a>
-        <a href="{{ route('transactions') }}" class="nav-item {{ request()->routeIs('transactions') ? 'active' : '' }}">
-            <div class="nav-icon">📊</div>
-            <span>Transactions</span>
-        </a>
-        <a href="{{ route('savings.index') }}" class="nav-item {{ request()->routeIs('savings.*') ? 'active' : '' }}">
-            <div class="nav-icon">💰</div>
-            <span>Épargne</span>
-        </a>
-        <a href="{{ route('settings') }}" class="nav-item {{ request()->routeIs('settings') ? 'active' : '' }}">
-            <div class="nav-icon">⚙️</div>
-            <span>Paramètres</span>
-        </a>
+        @if(auth()->user()->hasRole('admin') && request()->is('admin*'))
+            <a href="{{ route('admin.dashboard') }}"
+                class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <div class="nav-icon">📊</div>
+                <span>Stats</span>
+            </a>
+            <a href="{{ route('admin.users.index') }}"
+                class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <div class="nav-icon">👥</div>
+                <span>Users</span>
+            </a>
+            <a href="{{ route('admin.modules.index') }}"
+                class="nav-item {{ request()->routeIs('admin.modules.*') ? 'active' : '' }}">
+                <div class="nav-icon">🛠️</div>
+                <span>Modules</span>
+            </a>
+            <a href="{{ route('settings') }}" class="nav-item {{ request()->routeIs('settings') ? 'active' : '' }}">
+                <div class="nav-icon">⚙️</div>
+                <span>Admin</span>
+            </a>
+        @else
+            <a href="{{ route('home') }}" class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
+                <div class="nav-icon">🏠</div>
+                <span>Accueil</span>
+            </a>
+            <a href="{{ route('transactions') }}" class="nav-item {{ request()->routeIs('transactions') ? 'active' : '' }}">
+                <div class="nav-icon">📊</div>
+                <span>Transac</span>
+            </a>
+            <a href="{{ route('savings.index') }}" class="nav-item {{ request()->routeIs('savings.*') ? 'active' : '' }}">
+                <div class="nav-icon">💰</div>
+                <span>Épargne</span>
+            </a>
+            <a href="{{ route('settings') }}" class="nav-item {{ request()->routeIs('settings') ? 'active' : '' }}">
+                <div class="nav-icon">⚙️</div>
+                <span>Param.</span>
+            </a>
+        @endif
     </nav>
 </body>
 
