@@ -12,6 +12,18 @@
                 <h3 class="text-bold" style="font-size: 16px; margin-bottom: 20px;">Profil</h3>
 
                 <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <a href="{{ route('analytics') }}" class="glass-card"
+                        style="display: flex; align-items: center; justify-content: space-between; padding: 15px; text-decoration: none; border: 1px solid var(--accent-blue);">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 20px;">📊</span>
+                            <div>
+                                <p class="text-bold" style="font-size: 14px; color: white;">Ma Vision Globale</p>
+                                <p class="text-muted" style="font-size: 11px;">Analyses mensuelles détaillées</p>
+                            </div>
+                        </div>
+                        <span style="color: var(--accent-blue);">→</span>
+                    </a>
+
                     <div>
                         <label class="text-muted"
                             style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Nom

@@ -64,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
         return view('mobile.transactions', compact('revenues', 'expenses'));
     })->name('transactions');
 
+    Route::get('/analytics', [HomeController::class, 'analytics'])->name('analytics');
     Route::get('/settings', [HomeController::class, 'settings'])->name('settings');
     Route::post('/settings', [HomeController::class, 'updateSettings'])->name('settings.update');
 });

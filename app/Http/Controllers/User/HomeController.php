@@ -18,10 +18,10 @@ class HomeController extends Controller
     {
         $user = Auth::user();
 
-        $totalRevenue = Revenue::where('user_id', '=', $user->id)->sum('amount');
-        $totalExpenses = Expense::where('user_id', '=', $user->id)->sum('amount');
-        $totalDebts = Debt::where('user_id', '=', $user->id)->where('status', '=', 'pending')->sum('amount');
-        $totalSavings = Saving::where('user_id', '=', $user->id)->sum('current_amount');
+        $totalRevenue = Revenue::where('user_id', $user->id)->sum('amount');
+        $totalExpenses = Expense::where('user_id', $user->id)->sum('amount');
+        $totalDebts = Debt::where('user_id', $user->id)->where('status', 'pending')->sum('amount');
+        $totalSavings = Saving::where('user_id', $user->id)->sum('current_amount');
 
         $balance = $totalRevenue - $totalExpenses;
 
@@ -67,5 +67,46 @@ class HomeController extends Controller
         $settings->save();
 
         return back()->with('success', 'Profil et paramètres mis à jour !');
+    }
+
+    public function analytics(Request $request)
+    {
+        $user = Auth::user();
+        $month = (int) $request->get('month', now()->month);
+        $year = (int) $request->get('year', now()->year);
+
+        $totalRevenue = Revenue::where('user_id', $user->id)
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->sum('amount');
+
+        $totalExpenses = Expense::where('user_id', $user->id)
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->sum('amount');
+
+        $totalDebts = Debt::where('user_id', $user->id)
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->sum('amount');
+
+        $totalSavings = \App\Models\SavingContribution::whereHas('parentSaving', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->sum('amount');
+
+        $balance = $totalRevenue - $totalExpenses;
+
+        return view('mobile.analytics', compact(
+            'totalRevenue',
+            'totalExpenses',
+            'totalDebts',
+            'totalSavings',
+            'balance',
+            'month',
+            'year'
+        ));
     }
 }

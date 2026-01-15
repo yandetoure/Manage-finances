@@ -12,15 +12,41 @@ use App\Models\Saving;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $userCount = User::count();
-        $totalGlobalRevenue = Revenue::sum('amount');
-        $totalGlobalDebts = Debt::where('status', 'pending')->sum('amount');
-        $totalGlobalSavings = Saving::sum('current_amount');
+
+        $month = (int) $request->get('month', now()->month);
+        $year = (int) $request->get('year', now()->year);
+
+        $totalGlobalRevenue = Revenue::whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->sum('amount');
+
+        $totalGlobalExpenses = \App\Models\Expense::whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->sum('amount');
+
+        $totalGlobalDebts = Debt::whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->sum('amount');
+
+        // For savings, we look at contributions in that month
+        $totalGlobalSavings = \App\Models\SavingContribution::whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->sum('amount');
 
         $avgDebtPerUser = $userCount > 0 ? $totalGlobalDebts / $userCount : 0;
 
-        return view('admin.dashboard', compact('userCount', 'totalGlobalRevenue', 'totalGlobalDebts', 'totalGlobalSavings', 'avgDebtPerUser'));
+        return view('admin.dashboard', compact(
+            'userCount',
+            'totalGlobalRevenue',
+            'totalGlobalExpenses',
+            'totalGlobalDebts',
+            'totalGlobalSavings',
+            'avgDebtPerUser',
+            'month',
+            'year'
+        ));
     }
 }
