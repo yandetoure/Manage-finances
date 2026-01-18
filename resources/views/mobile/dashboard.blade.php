@@ -17,9 +17,9 @@
 
         <!-- Summary Grid -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <a href="{{ route('claims.index') }}" class="glass-card" style="margin-bottom: 0; text-decoration: none;">
+            <a href="{{ route('claims.index') }}" class="glass-card" style="margin-bottom: 0; text-decoration: none; border-left: 4px solid var(--accent-blue);">
                 <p class="text-muted" style="font-size: 12px;">Créances (Reste)</p>
-                <p class="text-bold text-blue">{{ number_format($totalClaims, 0, ',', ' ') }}
+                <p class="text-bold" style="color: var(--accent-blue);">{{ number_format($totalClaims, 0, ',', ' ') }}
                     {{ auth()->user()->currency }}
                 </p>
             </a>
@@ -86,8 +86,8 @@
                 datasets: [{
                     label: 'Solde',
                     data: [1200, 1500, 1300, 2100, 1800, 2400, 2540],
-                    borderColor: '#10B981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent-blue').trim() || '#3B82F6',
+                    backgroundColor: `rgba(${getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim() || '59, 130, 246'}, 0.1)`,
                     borderWidth: 3,
                     tension: 0.4,
                     fill: true,
@@ -95,7 +95,7 @@
                 }, {
                     label: 'Dépenses',
                     data: [800, 900, 1100, 950, 1200, 1050, 1100],
-                    borderColor: '#3B82F6',
+                    borderColor: '#94A3B8',
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     tension: 0.4,

@@ -21,6 +21,35 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        :root {
+            @php
+                $accentColor = auth()->user()->settings->accent_color ?? 'blue';
+                $palettes = [
+                    'blue'    => ['base' => '#3B82F6', 'dark' => '#2563EB', 'rgb' => '59, 130, 246'],
+                    'emerald' => ['base' => '#10B981', 'dark' => '#059669', 'rgb' => '16, 185, 129'],
+                    'rose'    => ['base' => '#F43F5E', 'dark' => '#E11D48', 'rgb' => '244, 63, 94'],
+                    'amber'   => ['base' => '#F59E0B', 'dark' => '#D97706', 'rgb' => '245, 158, 11'],
+                    'indigo'  => ['base' => '#6366F1', 'dark' => '#4F46E5', 'rgb' => '99, 102, 241'],
+                    'purple'  => ['base' => '#A855F7', 'dark' => '#9333EA', 'rgb' => '168, 85, 247'],
+                    'zinc'    => ['base' => '#71717a', 'dark' => '#52525b', 'rgb' => '113, 113, 122'],
+                    'orange'  => ['base' => '#f97316', 'dark' => '#ea580c', 'rgb' => '249, 115, 22'],
+                    'cyan'    => ['base' => '#06b6d4', 'dark' => '#0891b2', 'rgb' => '6, 182, 212'],
+                    'lime'    => ['base' => '#84cc16', 'dark' => '#65a30d', 'rgb' => '132, 204, 22'],
+                    'pink'    => ['base' => '#ec4899', 'dark' => '#db2777', 'rgb' => '236, 72, 153'],
+                    'teal'    => ['base' => '#14b8a6', 'dark' => '#0d9488', 'rgb' => '20, 184, 166'],
+                ];
+                $palette = $palettes[$accentColor] ?? $palettes['blue'];
+            @endphp
+            --accent-blue: {{ $palette['base'] }};
+            --accent-dark: {{ $palette['dark'] }};
+            --accent-rgb: {{ $palette['rgb'] }};
+            --primary-green: {{ $palette['base'] }};
+        }
+
+        .nav-item.active {
+            color: var(--accent-blue) !important;
+        }
+
         body {
             font-family: 'Outfit', sans-serif;
         }
@@ -31,11 +60,11 @@
     class="{{ (auth()->user()->settings->theme ?? 'dark') == 'light' ? 'light-mode' : '' }}">
     <header style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h1 class="text-2xl text-bold">Manage</h1>
+            <h1 class="text-2xl text-bold" style="color: var(--accent-blue);">Manage</h1>
             <p class="text-muted" style="font-size: 12px;">{{ now()->translatedFormat('d F Y') }}</p>
         </div>
         <div
-            style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-blue); display: flex; align-items: center; justify-content: center;">
+            style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(var(--accent-rgb), 0.3);">
             <span style="font-weight: bold; color: white;">{{ substr(auth()->user()->name ?? 'U', 0, 1) }}</span>
         </div>
     </header>

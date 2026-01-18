@@ -50,10 +50,11 @@ class HomeController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'currency' => 'required|string',
-            'language' => 'required|string',
+            'currency' => 'required|string|in:FCFA,EUR,USD,GBP,JPY,CNY,CAD,CHF,AUD,ZAR',
+            'language' => 'required|string|in:fr,en,es,pt,ar,de,it,zh',
             'notifications_enabled' => 'nullable|boolean',
-            'theme' => 'required|string|in:dark,light',
+            'theme' => 'nullable|string|in:dark,light',
+            'accent_color' => 'required|string|in:blue,emerald,rose,amber,indigo,purple,zinc,orange,cyan,lime,pink,teal',
         ]);
 
         // Update User Profile
@@ -71,7 +72,8 @@ class HomeController extends Controller
 
         $settings->currency = $validated['currency'];
         $settings->language = $validated['language'];
-        $settings->theme = $validated['theme'];
+        $settings->theme = $request->has('theme_mode') ? 'light' : 'dark';
+        $settings->accent_color = $validated['accent_color'];
         $settings->notifications_enabled = $request->has('notifications_enabled');
         $settings->save();
 
@@ -89,7 +91,7 @@ class HomeController extends Controller
         $totalRevenue = Revenue::where('user_id', '=', $user->id)
             ->where(function ($query) use ($month, $year, $selectedDate) {
                 $query->where(function ($q) use ($month, $year) {
-                    $q->whereMonth('due_date', '=', $month)->whereYear('due_date', '=', $year);
+                    $q->whereMonth('due_date', $month)->whereYear('due_date', '=', $year);
                 })->orWhere(function ($q) use ($selectedDate) {
                     $q->where('is_recurrent', '=', true)->where('due_date', '<=', $selectedDate);
                 });
@@ -99,7 +101,7 @@ class HomeController extends Controller
         $totalExpenses = Expense::where('user_id', '=', $user->id)
             ->where(function ($query) use ($month, $year, $selectedDate) {
                 $query->where(function ($q) use ($month, $year) {
-                    $q->whereMonth('date', '=', $month)->whereYear('date', '=', $year);
+                    $q->whereMonth('date', $month)->whereYear('date', '=', $year);
                 })->orWhere(function ($q) use ($selectedDate) {
                     $q->where('is_recurrent', '=', true)->where('date', '<=', $selectedDate);
                 });
@@ -107,16 +109,16 @@ class HomeController extends Controller
             ->sum('amount');
 
         $totalDebts = Debt::where('user_id', '=', $user->id)
-            ->whereMonth('created_at', '=', $month)
-            ->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
             ->get()
             ->sum('remaining');
 
         $totalSavings = \App\Models\SavingContribution::whereHas('parentSaving', function ($q) use ($user) {
             $q->where('user_id', '=', $user->id);
         })
-            ->whereMonth('created_at', '=', $month)
-            ->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
             ->sum('amount');
 
         $balance = $totalRevenue - $totalExpenses;

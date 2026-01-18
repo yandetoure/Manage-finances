@@ -14,6 +14,7 @@ class UserSetting extends Model
         'currency',
         'language',
         'theme',
+        'accent_color',
         'notifications_enabled',
     ];
 
