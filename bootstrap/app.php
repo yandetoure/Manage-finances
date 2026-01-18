@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\LocaleMiddleware::class,
+        ]);
+
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureIsAdmin::class,
             'module.active' => \App\Http\Middleware\EnsureModuleIsActive::class,

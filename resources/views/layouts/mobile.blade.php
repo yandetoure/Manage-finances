@@ -251,19 +251,19 @@
         @else
             <a href="{{ route('home') }}" class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
                 <div class="nav-icon">🏠</div>
-                <span>Accueil</span>
+                <span>{{ __('Accueil') }}</span>
             </a>
             <a href="{{ route('transactions') }}" class="nav-item {{ request()->routeIs('transactions') ? 'active' : '' }}">
                 <div class="nav-icon">📊</div>
-                <span>Transac</span>
+                <span>{{ __('Transac') }}</span>
             </a>
             <a href="{{ route('savings.index') }}" class="nav-item {{ request()->routeIs('savings.*') ? 'active' : '' }}">
                 <div class="nav-icon">💰</div>
-                <span>Épargne</span>
+                <span>{{ __('Épargne') }}</span>
             </a>
             <a href="{{ route('settings') }}" class="nav-item {{ request()->routeIs('settings') ? 'active' : '' }}">
                 <div class="nav-icon">⚙️</div>
-                <span>Param.</span>
+                <span>{{ __('Param.') }}</span>
             </a>
         @endif
     </nav>
