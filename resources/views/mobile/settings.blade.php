@@ -1,284 +1,196 @@
 @extends('layouts.mobile')
 
 @section('content')
-    <div class="fade-in">
-        <h2 class="text-bold" style="margin-bottom: 25px;">Paramètres</h2>
-
-        <form action="{{ route('settings.update') }}" method="POST">
-            @csrf
-
-            <!-- Profil Section -->
-            <div class="glass-card" style="margin-bottom: 20px; padding: 20px;">
-                <h3 class="text-bold" style="font-size: 16px; margin-bottom: 20px;">Profil</h3>
-
-                <div style="display: flex; flex-direction: column; gap: 15px;">
-                    <a href="{{ route('analytics') }}" class="glass-card"
-                        style="display: flex; align-items: center; justify-content: space-between; padding: 15px; text-decoration: none; border: 1px solid var(--accent-blue);">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">📊</span>
-                            <div>
-                                <p class="text-bold" style="font-size: 14px; color: white;">Ma Vision Globale</p>
-                                <p class="text-muted" style="font-size: 11px;">Analyses mensuelles détaillées</p>
-                            </div>
-                        </div>
-                        <span style="color: var(--accent-blue);">→</span>
-                    </a>
-
-                    <div>
-                        <label class="text-muted"
-                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Nom
-                            complet</label>
-                        <input type="text" name="name" value="{{ auth()->user()->name }}" class="input-modern"
-                            style="width: 100%;" required>
-                    </div>
-
-                    <div>
-                        <label class="text-muted"
-                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Adresse
-                            Email</label>
-                        <input type="email" name="email" value="{{ auth()->user()->email }}" class="input-modern"
-                            style="width: 100%;" required>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Préférences Section -->
-            <div class="glass-card" style="margin-bottom: 20px; padding: 20px;">
-                <h3 class="text-bold" style="font-size: 16px; margin-bottom: 20px;">Préférences</h3>
-
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <!-- Devise -->
-                    <div>
-                        <label class="text-muted"
-                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Devise
-                            par défaut</label>
-                        <select name="currency" class="input-modern" style="width: 100%;">
-                            <optgroup label="Courantes">
-                                <option value="FCFA" {{ $settings->currency == 'FCFA' ? 'selected' : '' }}>FCFA (Franc CFA)
-                                </option>
-                                <option value="EUR" {{ $settings->currency == 'EUR' ? 'selected' : '' }}>EUR (Euro)</option>
-                                <option value="USD" {{ $settings->currency == 'USD' ? 'selected' : '' }}>USD (Dollar)</option>
-                            </optgroup>
-                            <optgroup label="Internationales">
-                                <option value="GBP" {{ $settings->currency == 'GBP' ? 'selected' : '' }}>GBP (Livre Sterling)
-                                </option>
-                                <option value="JPY" {{ $settings->currency == 'JPY' ? 'selected' : '' }}>JPY (Yen)</option>
-                                <option value="CNY" {{ $settings->currency == 'CNY' ? 'selected' : '' }}>CNY (Yuan)</option>
-                                <option value="CAD" {{ $settings->currency == 'CAD' ? 'selected' : '' }}>CAD (Dollar Canadien)
-                                </option>
-                                <option value="CHF" {{ $settings->currency == 'CHF' ? 'selected' : '' }}>CHF (Franc Suisse)
-                                </option>
-                                <option value="AUD" {{ $settings->currency == 'AUD' ? 'selected' : '' }}>AUD (Dollar
-                                    Australien)</option>
-                                <option value="ZAR" {{ $settings->currency == 'ZAR' ? 'selected' : '' }}>ZAR (Rand
-                                    Sud-Africain)</option>
-                            </optgroup>
-                        </select>
-                    </div>
-
-                    <!-- Langue -->
-                    <div>
-                        <label class="text-muted"
-                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Langue
-                            de l'interface</label>
-                        <select name="language" class="input-modern" style="width: 100%;">
-                            <option value="fr" {{ $settings->language == 'fr' ? 'selected' : '' }}>🇫🇷 Français</option>
-                            <option value="en" {{ $settings->language == 'en' ? 'selected' : '' }}>🇺🇸 English</option>
-                            <option value="es" {{ $settings->language == 'es' ? 'selected' : '' }}>🇪🇸 Español</option>
-                            <option value="pt" {{ $settings->language == 'pt' ? 'selected' : '' }}>🇵🇹 Português</option>
-                            <option value="ar" {{ $settings->language == 'ar' ? 'selected' : '' }}>🇸🇦 العربية</option>
-                            <option value="de" {{ $settings->language == 'de' ? 'selected' : '' }}>🇩🇪 Deutsch</option>
-                            <option value="it" {{ $settings->language == 'it' ? 'selected' : '' }}>🇮🇹 Italiano</option>
-                            <option value="zh" {{ $settings->language == 'zh' ? 'selected' : '' }}>🇨🇳 中文</option>
-                        </select>
-                    </div>
-
-                    <!-- Thème Mode -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                            <div>
-                                <span class="text-bold" style="font-size: 14px; display: block;">Mode Clair</span>
-                                <span class="text-muted" style="font-size: 11px;">Activez pour une interface lumineuse</span>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" name="theme_mode" value="1" {{ $settings->theme == 'light' ? 'checked' : '' }}>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-
-                    <!-- Accent Color -->
-                    <div>
-                        <label class="text-muted"
-                            style="font-size: 11px; display: block; margin-bottom: 15px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Couleur d'accentuation</label>
-                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
-                            @php
-                                $colors = [
-                                    'blue' => ['hex' => '#3B82F6', 'name' => 'Bleu'],
-                                    'emerald' => ['hex' => '#10B981', 'name' => 'Émeraude'],
-                                    'rose' => ['hex' => '#F43F5E', 'name' => 'Rose'],
-                                    'amber' => ['hex' => '#F59E0B', 'name' => 'Ambre'],
-                                    'indigo' => ['hex' => '#6366F1', 'name' => 'Indigo'],
-                                    'purple' => ['hex' => '#A855F7', 'name' => 'Violet'],
-                                    'zinc' => ['hex' => '#71717a', 'name' => 'Zinc'],
-                                    'orange' => ['hex' => '#f97316', 'name' => 'Orange'],
-                                    'cyan' => ['hex' => '#06b6d4', 'name' => 'Cyan'],
-                                    'lime' => ['hex' => '#84cc16', 'name' => 'Lime'],
-                                    'pink' => ['hex' => '#ec4899', 'name' => 'Pink'],
-                                    'teal' => ['hex' => '#14b8a6', 'name' => 'Teal'],
-                                ];
-                            @endphp
-                            @foreach($colors as $key => $color)
-                                <label style="position: relative; cursor: pointer;">
-                                    <input type="radio" name="accent_color" value="{{ $key }}" style="display: none;" {{ ($settings->accent_color ?? 'blue') == $key ? 'checked' : '' }}>
-                                    <div class="accent-option" 
-                                        style="width: 100%; aspect-ratio: 1.2; border-radius: 14px; background: {{ $color['hex'] }}; border: 3px solid transparent; transition: 0.3s; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-                                        <div class="check-mark" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; opacity: 0; transition: 0.2s;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                                        </div>
-                                        <span style="position: absolute; bottom: 5px; left: 0; right: 0; text-align: center; font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.8); text-transform: uppercase;">{{ $color['name'] }}</span>
-                                    </div>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-
-                        <!-- Notifications Switch -->
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                            <div>
-                                <span class="text-bold" style="font-size: 14px; display: block;">Notifications Push</span>
-                                <span class="text-muted" style="font-size: 11px;">Restez informé de vos finances</span>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" name="notifications_enabled" value="1" {{ $settings->notifications_enabled ? 'checked' : '' }}>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-accent"
-                        style="width: 100%; border-radius: 18px; margin-top: 30px; padding: 16px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2); border: none;">Enregistrer
-                        les préférences</button>
-                </div>
-            </form>
-
-            <!-- Modules Section (Quick Access) -->
-            <div class="glass-card" style="margin-bottom: 20px; padding: 20px;">
-                <h3 class="text-bold" style="font-size: 16px; margin-bottom: 20px;">Services</h3>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                    <a href="{{ route('revenues.index') }}" class="module-mini-btn">📈</a>
-                    <a href="{{ route('expenses.index') }}" class="module-mini-btn">📉</a>
-                    <a href="{{ route('debts.index') }}" class="module-mini-btn">💸</a>
-                    <a href="{{ route('claims.index') }}" class="module-mini-btn">🤝</a>
-                    <a href="{{ route('savings.index') }}" class="module-mini-btn">💰</a>
-                    <a href="{{ route('forecasts.index') }}" class="module-mini-btn">🔮</a>
-                </div>
-            </div>
-
-            @if (auth()->user()->hasRole('admin'))
-                <div style="margin-top: 20px;">
-                    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary"
-                        style="width: 100%; background: #1e293b; border: 1px solid var(--accent-blue); border-radius: 12px;">Accéder
-                        à l'Admin</a>
-                </div>
-            @endif
-
-            <div style="margin-top: 30px; text-align: center; padding-bottom: 40px;">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="text-muted"
-                        style="background: none; border: none; font-size: 14px; text-decoration: underline; cursor: pointer;">Déconnexion</button>
-                </form>
-                <p class="text-muted" style="font-size: 10px; margin-top: 20px;">Version 1.1.0 - Manage Financial SaaS</p>
-            </div>
-        </div>
-
+    <div class="fade-in settings-screen">
         <style>
-            .module-btn {
+            .settings-screen {
+                padding-bottom: 50px;
+            }
+
+            .settings-header {
+                margin-bottom: 25px;
+            }
+
+            .settings-section-title {
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: rgba(255, 255, 255, 0.4);
+                margin: 25px 0 10px 15px;
+            }
+
+            .light-mode .settings-section-title {
+                color: rgba(0, 0, 0, 0.4);
+            }
+
+            .settings-group {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 20px;
+                overflow: hidden;
+                margin-bottom: 10px;
+            }
+
+            .light-mode .settings-group {
+                background: #ffffff;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            }
+
+            .settings-row {
                 display: flex;
-                flex-direction: column;
                 align-items: center;
-                justify-content: center;
-                gap: 10px;
-                padding: 15px 10px;
-                border-radius: 16px;
+                justify-content: space-between;
+                padding: 14px 16px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.03);
                 text-decoration: none;
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                color: inherit;
+                transition: background 0.2s;
             }
 
-            .module-btn:active {
-                transform: scale(0.95);
+            .settings-row:last-child {
+                border-bottom: none;
             }
 
-            .module-icon {
-                width: 40px;
-                height: 40px;
-                border-radius: 12px;
+            .settings-row:active {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .light-mode .settings-row:active {
+                background: rgba(0, 0, 0, 0.02);
+            }
+
+            .light-mode .settings-row {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            }
+
+            .settings-row-left {
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                font-size: 20px;
+                gap: 12px;
             }
 
-            .module-label {
-                font-size: 12px;
-                font-weight: 600;
-                color: #fff;
-            }
-
-            .input-modern {
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.15);
-                border-radius: 12px;
-                padding: 12px;
-                color: white;
-                outline: none;
-                transition: 0.2s;
-            }
-
-            .input-modern:focus {
-                border-color: var(--accent-blue);
-            }
-
-            .module-mini-btn {
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 12px;
-                height: 50px;
+            .settings-icon-box {
+                width: 32px;
+                height: 32px;
+                border-radius: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 18px;
-                text-decoration: none;
+                flex-shrink: 0;
+            }
+
+            .settings-label {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .settings-row-right {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: rgba(255, 255, 255, 0.4);
+                font-size: 13px;
+            }
+
+            .light-mode .settings-row-right {
+                color: rgba(0, 0, 0, 0.4);
+            }
+
+            .settings-input-ghost {
+                background: transparent;
+                border: none;
+                color: white;
+                text-align: right;
+                font-size: 14px;
+                font-family: inherit;
+                outline: none;
+                padding: 0;
+            }
+
+            .light-mode .settings-input-ghost {
+                color: #1e293b;
+            }
+
+            .settings-select-ghost {
+                background: transparent;
+                border: none;
+                color: white;
+                font-size: 14px;
+                outline: none;
+                appearance: none;
+                text-align: right;
+                padding-right: 5px;
+            }
+
+            .light-mode .settings-select-ghost {
+                color: #1e293b;
+            }
+
+            /* Grid for colors in list */
+            .settings-color-grid {
+                padding: 16px;
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 10px;
+            }
+
+            .color-bubble {
+                width: 100%;
+                aspect-ratio: 1;
+                border-radius: 50%;
+                border: 2px solid transparent;
                 transition: 0.2s;
+                cursor: pointer;
+                position: relative;
             }
 
-            .module-mini-btn:active {
-                background: rgba(255, 255, 255, 0.1);
-                transform: scale(0.95);
-            }
-
-            .theme-option {
-                background: rgba(255, 255, 255, 0.03);
-            }
-
-            input[type="radio"]:checked+.theme-option {
-                background: rgba(var(--accent-rgb), 0.15) !important;
-                border-color: var(--accent-blue) !important;
-                box-shadow: 0 8px 15px rgba(var(--accent-rgb), 0.1);
-                transform: translateY(-2px);
-            }
-
-            input[type="radio"]:checked+.accent-option {
-                border-color: white !important;
+            .color-bubble.active {
+                border-color: white;
                 transform: scale(1.1);
             }
 
-            input[type="radio"]:checked+.accent-option .check-mark {
-                opacity: 1 !important;
+            .light-mode .color-bubble.active {
+                border-color: #334155;
             }
 
-            .btn-accent {
+            .color-bubble .check {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-size: 12px;
+                opacity: 0;
+            }
+
+            .color-bubble.active .check {
+                opacity: 1;
+            }
+
+            .save-btn-container {
+                margin-top: 30px;
+                padding: 0 15px;
+            }
+
+            .btn-premium {
+                width: 100%;
+                padding: 16px;
+                border-radius: 16px;
+                border: none;
+                font-weight: 700;
+                font-size: 15px;
+                color: white;
                 background: linear-gradient(135deg, var(--accent-blue), var(--accent-dark));
+                box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.2);
+                transition: 0.2s;
+            }
+
+            .btn-premium:active {
+                transform: scale(0.98);
+                box-shadow: 0 5px 10px rgba(var(--accent-rgb), 0.15);
             }
 
             /* Switch Toggle */
@@ -317,6 +229,10 @@
                 transition: .4s;
             }
 
+            .light-mode .slider {
+                background-color: #e2e8f0;
+            }
+
             input:checked+.slider {
                 background-color: var(--accent-blue);
             }
@@ -333,4 +249,196 @@
                 border-radius: 50%;
             }
         </style>
+
+        <div class="settings-header">
+            <h2 class="text-bold">Paramètres</h2>
+        </div>
+
+        <form action="{{ route('settings.update') }}" method="POST">
+            @csrf
+
+            <!-- SECTION: COMPTE -->
+            <p class="settings-section-title">Compte</p>
+            <div class="settings-group">
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <div class="settings-icon-box"
+                            style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">👤</div>
+                        <span class="settings-label">Nom complet</span>
+                    </div>
+                    <div class="settings-row-right">
+                        <input type="text" name="name" value="{{ auth()->user()->name }}" class="settings-input-ghost"
+                            required>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <div class="settings-icon-box"
+                            style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">✉️</div>
+                        <span class="settings-label">Email</span>
+                    </div>
+                    <div class="settings-row-right">
+                        <input type="email" name="email" value="{{ auth()->user()->email }}" class="settings-input-ghost"
+                            required>
+                    </div>
+                </div>
+                <a href="{{ route('analytics') }}" class="settings-row">
+                    <div class="settings-row-left">
+                        <div class="settings-icon-box"
+                            style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">📊</div>
+                        <span class="settings-label">Vision Globale</span>
+                    </div>
+                    <div class="settings-row-right">
+                        <span>Voir analyses</span>
+                        <span>→</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- SECTION: APPARENCE -->
+            <p class="settings-section-title">Apparence</p>
+            <div class="settings-group">
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <div class="settings-icon-box" style="background: #fbbf2420; color: #fbbf24;">☀️</div>
+                        <span class="settings-label">Mode Clair</span>
+                    </div>
+                    <div class="settings-row-right">
+                        <label class="switch">
+                            <input type="checkbox" name="theme_mode" value="1" {{ $settings->theme == 'light' ? 'checked' : '' }}>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.03);">
+                    <div class="settings-row" style="border-bottom: none;">
+                        <div class="settings-row-left">
+                            <div class="settings-icon-box"
+                                style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">🎨</div>
+                            <span class="settings-label">Couleur d'accentuation</span>
+                        </div>
+                    </div>
+                    <div class="settings-color-grid">
+                        @php
+                            $colors = [
+                                'blue' => '#3B82F6',
+                                'emerald' => '#10B981',
+                                'rose' => '#F43F5E',
+                                'amber' => '#F59E0B',
+                                'indigo' => '#6366F1',
+                                'purple' => '#A855F7',
+                                'zinc' => '#71717a',
+                                'orange' => '#f97316',
+                                'cyan' => '#06b6d4',
+                                'lime' => '#84cc16',
+                                'pink' => '#ec4899',
+                                'teal' => '#14b8a6',
+                            ];
+                        @endphp
+                        @foreach($colors as $key => $hex)
+                            <label class="color-bubble {{ ($settings->accent_color ?? 'blue') == $key ? 'active' : '' }}"
+                                style="background: {{ $hex }};" onclick="selectColor(this, '{{ $key }}')">
+                                <input type="radio" name="accent_color" value="{{ $key }}" style="display: none;" {{ ($settings->accent_color ?? 'blue') == $key ? 'checked' : '' }}>
+                                <span class="check">✓</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: PRÉFÉRENCES -->
+            <p class="settings-section-title">Préférences</p>
+            <div class="settings-group">
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <div class="settings-icon-box" style="background: #10b98120; color: #10b981;">💰</div>
+                        <span class="settings-label">Devise</span>
+                    </div>
+                    <div class="settings-row-right">
+                        <select name="currency" class="settings-select-ghost">
+                            <option value="FCFA" {{ $settings->currency == 'FCFA' ? 'selected' : '' }}>FCFA</option>
+                            <option value="EUR" {{ $settings->currency == 'EUR' ? 'selected' : '' }}>EUR</option>
+                            <option value="USD" {{ $settings->currency == 'USD' ? 'selected' : '' }}>USD</option>
+                            <option value="GBP" {{ $settings->currency == 'GBP' ? 'selected' : '' }}>GBP</option>
+                            <option value="JPY" {{ $settings->currency == 'JPY' ? 'selected' : '' }}>JPY</option>
+                            <option value="CNY" {{ $settings->currency == 'CNY' ? 'selected' : '' }}>CNY</option>
+                            <option value="CAD" {{ $settings->currency == 'CAD' ? 'selected' : '' }}>CAD</option>
+                        </select>
+                        <span>⌵</span>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <div class="settings-icon-box" style="background: #3b82f620; color: #3b82f6;">🌐</div>
+                        <span class="settings-label">Langue</span>
+                    </div>
+                    <div class="settings-row-right">
+                        <select name="language" class="settings-select-ghost">
+                            <option value="fr" {{ $settings->language == 'fr' ? 'selected' : '' }}>Français</option>
+                            <option value="en" {{ $settings->language == 'en' ? 'selected' : '' }}>English</option>
+                            <option value="es" {{ $settings->language == 'es' ? 'selected' : '' }}>Español</option>
+                            <option value="pt" {{ $settings->language == 'pt' ? 'selected' : '' }}>Português</option>
+                        </select>
+                        <span>⌵</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: SYSTÈME -->
+            <p class="settings-section-title">Système</p>
+            <div class="settings-group">
+                <div class="settings-row">
+                    <div class="settings-row-left">
+                        <div class="settings-icon-box" style="background: #f43f5e20; color: #f43f5e;">🔔</div>
+                        <span class="settings-label">Notifications</span>
+                    </div>
+                    <div class="settings-row-right">
+                        <label class="switch">
+                            <input type="checkbox" name="notifications_enabled" value="1" {{ $settings->notifications_enabled ? 'checked' : '' }}>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                @if (auth()->user()->hasRole('admin'))
+                    <a href="{{ route('admin.dashboard') }}" class="settings-row">
+                        <div class="settings-row-left">
+                            <div class="settings-icon-box" style="background: #6366f120; color: #6366f1;">🛡️</div>
+                            <span class="settings-label">Administration</span>
+                        </div>
+                        <div class="settings-row-right">
+                            <span>→</span>
+                        </div>
+                    </a>
+                @endif
+            </div>
+
+            <div class="save-btn-container">
+                <button type="submit" class="btn-premium">Enregistrer les réglages</button>
+            </div>
+        </form>
+
+        <div style="margin-top: 25px; text-align: center; opacity: 0.5;">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit"
+                    style="background: none; border: none; color: white; font-size: 13px; text-decoration: underline; cursor: pointer;"
+                    class="logout-btn">Déconnexion</button>
+            </form>
+            <p style="font-size: 10px; margin-top: 15px;">Version 1.2.0 - Manage Premium</p>
+        </div>
+
+        <style>
+            .light-mode .logout-btn {
+                color: #1e293b !important;
+            }
+        </style>
+    </div>
+
+    <script>
+        function selectColor(el, key) {
+            document.querySelectorAll('.color-bubble').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            el.querySelector('input').checked = true;
+        }
+    </script>
 @endsection
