@@ -25,6 +25,7 @@
             @php
                 $accentColor = auth()->user()->settings->accent_color ?? 'blue';
                 $palettes = [
+                    // --- Pure / Classic ---
                     'blue'    => ['base' => '#3B82F6', 'dark' => '#2563EB', 'rgb' => '59, 130, 246'],
                     'emerald' => ['base' => '#10B981', 'dark' => '#059669', 'rgb' => '16, 185, 129'],
                     'rose'    => ['base' => '#F43F5E', 'dark' => '#E11D48', 'rgb' => '244, 63, 94'],
@@ -37,12 +38,38 @@
                     'lime'    => ['base' => '#84cc16', 'dark' => '#65a30d', 'rgb' => '132, 204, 22'],
                     'pink'    => ['base' => '#ec4899', 'dark' => '#db2777', 'rgb' => '236, 72, 153'],
                     'teal'    => ['base' => '#14b8a6', 'dark' => '#0d9488', 'rgb' => '20, 184, 166'],
+
+                    // --- Dark Vibes ---
+                    'night'   => ['base' => '#334155', 'dark' => '#0f172a', 'rgb' => '51, 65, 85'],
+                    'forest'  => ['base' => '#065f46', 'dark' => '#022c22', 'rgb' => '6, 95, 70'],
+                    'burgundy' => ['base' => '#991b1b', 'dark' => '#450a0a', 'rgb' => '153, 27, 27'],
+                    'cacao'   => ['base' => '#78350f', 'dark' => '#451a03', 'rgb' => '120, 53, 15'],
+                    'midnight' => ['base' => '#1e1b4b', 'dark' => '#0f172a', 'rgb' => '30, 27, 75'],
+
+                    // --- Soft / Pastel ---
+                    'sky'     => ['base' => '#7dd3fc', 'dark' => '#0ea5e9', 'rgb' => '125, 211, 252'],
+                    'mint'    => ['base' => '#6ee7b7', 'dark' => '#10b981', 'rgb' => '110, 231, 183'],
+                    'sakura'  => ['base' => '#fbcfe8', 'dark' => '#ec4899', 'rgb' => '251, 207, 232'],
+                    'lavender' => ['base' => '#ddd6fe', 'dark' => '#8b5cf6', 'rgb' => '221, 214, 254'],
+                    'sand'    => ['base' => '#fde68a', 'dark' => '#f59e0b', 'rgb' => '253, 230, 138'],
+                    'olive'   => ['base' => '#d9f99d', 'dark' => '#84cc16', 'rgb' => '217, 249, 157'],
+
+                    // --- Gradients ---
+                    'sunset'  => ['base' => '#f59e0b', 'dark' => '#ef4444', 'rgb' => '245, 158, 11', 'gradient' => 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)'],
+                    'ocean'   => ['base' => '#06b6d4', 'dark' => '#3b82f6', 'rgb' => '6, 182, 212', 'gradient' => 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)'],
+                    'cosmic'  => ['base' => '#a855f7', 'dark' => '#6366f1', 'rgb' => '168, 85, 247', 'gradient' => 'linear-gradient(135deg, #a855f7 0%, #6366f1 100%)'],
+                    'fire'    => ['base' => '#f87171', 'dark' => '#dc2626', 'rgb' => '248, 113, 113', 'gradient' => 'linear-gradient(135deg, #f87171 0%, #7f1d1d 100%)'],
+                    'tropical' => ['base' => '#34d399', 'dark' => '#3b82f6', 'rgb' => '52, 211, 153', 'gradient' => 'linear-gradient(135deg, #34d399 0%, #3b82f6 100%)'],
+                    'berry'   => ['base' => '#fb7185', 'dark' => '#881337', 'rgb' => '251, 113, 133', 'gradient' => 'linear-gradient(135deg, #fb7185 0%, #881337 100%)'],
+                    'gold'    => ['base' => '#fbbf24', 'dark' => '#92400e', 'rgb' => '251, 191, 36', 'gradient' => 'linear-gradient(135deg, #fbbf24 0%, #92400e 100%)'],
                 ];
                 $palette = $palettes[$accentColor] ?? $palettes['blue'];
+                $gradient = $palette['gradient'] ?? "linear-gradient(135deg, {$palette['base']} 0%, {$palette['dark']} 100%)";
             @endphp
             --accent-blue: {{ $palette['base'] }};
             --accent-dark: {{ $palette['dark'] }};
             --accent-rgb: {{ $palette['rgb'] }};
+            --accent-gradient: {!! $gradient !!};
             --primary-green: {{ $palette['base'] }};
 
             /* Default Dark Mode Variables */
@@ -145,7 +172,9 @@
         }
 
         header h1 {
-            color: var(--accent-blue) !important;
+            background: var(--accent-gradient) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
             text-shadow: 0 0 15px rgba(var(--accent-rgb), 0.2);
         }
 
@@ -155,7 +184,7 @@
 
         /* Button Colors Alignment */
         .btn-primary, .btn-accent, .btn-premium {
-            background: var(--accent-blue) !important;
+            background: var(--accent-gradient) !important;
             color: white !important;
             box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.35) !important;
         }

@@ -54,7 +54,7 @@ class HomeController extends Controller
             'language' => 'required|string|in:fr,en,es,pt,ar,de,it,zh',
             'notifications_enabled' => 'nullable|boolean',
             'theme' => 'nullable|string|in:dark,light',
-            'accent_color' => 'required|string|in:blue,emerald,rose,amber,indigo,purple,zinc,orange,cyan,lime,pink,teal',
+            'accent_color' => 'required|string|in:blue,emerald,rose,amber,indigo,purple,zinc,orange,cyan,lime,pink,teal,night,forest,burgundy,cacao,midnight,sky,mint,sakura,lavender,sand,olive,sunset,ocean,cosmic,fire,tropical,berry,gold',
         ]);
 
         // Update User Profile
@@ -76,6 +76,14 @@ class HomeController extends Controller
         $settings->accent_color = $validated['accent_color'];
         $settings->notifications_enabled = $request->has('notifications_enabled');
         $settings->save();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Paramètres mis à jour !',
+                'settings' => $settings
+            ]);
+        }
 
         return back()->with('success', 'Profil et paramètres mis à jour !');
     }

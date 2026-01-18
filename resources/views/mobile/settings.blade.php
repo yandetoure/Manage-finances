@@ -303,29 +303,64 @@
                             <span class="settings-label">Couleur d'accentuation</span>
                         </div>
                     </div>
-                    <div class="settings-color-grid">
+                    <div style="padding: 16px;">
                         @php
-                            $colors = [
-                                'blue' => '#3B82F6',
-                                'emerald' => '#10B981',
-                                'rose' => '#F43F5E',
-                                'amber' => '#F59E0B',
-                                'indigo' => '#6366F1',
-                                'purple' => '#A855F7',
-                                'zinc' => '#71717a',
-                                'orange' => '#f97316',
-                                'cyan' => '#06b6d4',
-                                'lime' => '#84cc16',
-                                'pink' => '#ec4899',
-                                'teal' => '#14b8a6',
+                            $paletteGroups = [
+                                'Classiques' => [
+                                    'blue' => '#3B82F6',
+                                    'emerald' => '#10B981',
+                                    'rose' => '#F43F5E',
+                                    'amber' => '#F59E0B',
+                                    'indigo' => '#6366F1',
+                                    'purple' => '#A855F7',
+                                    'zinc' => '#71717a',
+                                    'orange' => '#f97316',
+                                    'cyan' => '#06b6d4',
+                                    'lime' => '#84cc16',
+                                    'pink' => '#ec4899',
+                                    'teal' => '#14b8a6',
+                                ],
+                                'Sombres' => [
+                                    'night' => '#334155',
+                                    'forest' => '#065f46',
+                                    'burgundy' => '#991b1b',
+                                    'cacao' => '#78350f',
+                                    'midnight' => '#1e1b4b',
+                                ],
+                                'Doux' => [
+                                    'sky' => '#7dd3fc',
+                                    'mint' => '#6ee7b7',
+                                    'sakura' => '#fbcfe8',
+                                    'lavender' => '#ddd6fe',
+                                    'sand' => '#fde68a',
+                                    'olive' => '#d9f99d',
+                                ],
+                                'Dégradés' => [
+                                    'sunset' => 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+                                    'ocean' => 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
+                                    'cosmic' => 'linear-gradient(135deg, #a855f7 0%, #6366f1 100%)',
+                                    'fire' => 'linear-gradient(135deg, #f87171 0%, #7f1d1d 100%)',
+                                    'tropical' => 'linear-gradient(135deg, #34d399 0%, #3b82f6 100%)',
+                                    'berry' => 'linear-gradient(135deg, #fb7185 0%, #881337 100%)',
+                                    'gold' => 'linear-gradient(135deg, #fbbf24 0%, #92400e 100%)',
+                                ],
                             ];
                         @endphp
-                        @foreach($colors as $key => $hex)
-                            <label class="color-bubble {{ ($settings->accent_color ?? 'blue') == $key ? 'active' : '' }}"
-                                style="background: {{ $hex }};" onclick="selectColor(this, '{{ $key }}')">
-                                <input type="radio" name="accent_color" value="{{ $key }}" style="display: none;" {{ ($settings->accent_color ?? 'blue') == $key ? 'checked' : '' }}>
-                                <span class="check">✓</span>
-                            </label>
+
+                        @foreach($paletteGroups as $groupName => $colors)
+                            <p
+                                style="font-size: 10px; color: var(--text-muted); margin-bottom: 8px; {{ $loop->first ? '' : 'margin-top: 15px;' }}">
+                                {{ $groupName }}
+                            </p>
+                            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;">
+                                @foreach($colors as $key => $style)
+                                    <label class="color-bubble {{ ($settings->accent_color ?? 'blue') == $key ? 'active' : '' }}"
+                                        style="background: {{ $style }};" onclick="selectColor(this, '{{ $key }}')">
+                                        <input type="radio" name="accent_color" value="{{ $key }}" style="display: none;" {{ ($settings->accent_color ?? 'blue') == $key ? 'checked' : '' }}>
+                                        <span class="check">✓</span>
+                                    </label>
+                                @endforeach
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -409,6 +444,10 @@
         </div>
 
         <script>
+            // Store initial theme values to avoid unnecessary reloads
+            let currentTheme = '{{ $settings->theme ?? 'dark' }}';
+            let currentAccent = '{{ $settings->accent_color ?? 'blue' }}';
+
             function selectColor(el, key) {
                 document.querySelectorAll('.color-bubble').forEach(b => b.classList.remove('active'));
                 el.classList.add('active');
@@ -422,6 +461,7 @@
                 const formData = new FormData(form);
 
                 status.style.display = 'block';
+                status.style.color = 'var(--text-muted)';
                 status.innerText = 'Sauvegarde...';
 
                 try {
@@ -429,27 +469,35 @@
                         method: 'POST',
                         body: formData,
                         headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                         }
                     });
 
                     if (response.ok) {
                         status.innerText = 'Enregistré ↑';
+
+                        const newAccent = formData.get('accent_color');
+                        const newTheme = formData.has('theme_mode') ? 'light' : 'dark';
+
                         setTimeout(() => {
-                            // Si le thème a changé, on recharge pour appliquer les variables CSS
-                            if (formData.has('theme_mode') || formData.has('accent_color')) {
+                            // Only reload if a visual theme-changing setting was actually modified
+                            if (newAccent !== currentAccent || newTheme !== currentTheme) {
                                 window.location.reload();
                             } else {
                                 status.style.display = 'none';
                             }
                         }, 1000);
                     } else {
+                        const errorData = await response.json();
                         status.innerText = 'Erreur ❌';
                         status.style.color = '#ef4444';
+                        console.error('Validation failed:', errorData);
                     }
                 } catch (error) {
                     console.error('Error saving settings:', error);
                     status.innerText = 'Erreur ❌';
+                    status.style.color = '#ef4444';
                 }
             }
         </script>
