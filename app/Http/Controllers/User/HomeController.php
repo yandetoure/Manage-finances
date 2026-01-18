@@ -123,6 +123,59 @@ class HomeController extends Controller
 
         $balance = $totalRevenue - $totalExpenses;
 
+        // Data for Category Distribution (Selected Month)
+        $expensesByCategory = Expense::where('user_id', '=', $user->id, 'and')
+            ->where(function ($query) use ($month, $year, $selectedDate) {
+                $query->where(function ($q) use ($month, $year) {
+                    $q->whereMonth('date', '=', $month)->whereYear('date', '=', $year);
+                })->orWhere(function ($q) use ($selectedDate) {
+                    $q->where('is_recurrent', '=', true)->where('date', '<=', $selectedDate);
+                });
+            })
+            ->with('category')
+            ->get()
+            ->groupBy('category_id')
+            ->map(function ($items) {
+                return [
+                    'name' => $items->first()->category->name ?? 'Autre',
+                    'amount' => $items->sum('amount'),
+                    'color' => $items->first()->category->color ?? '#94A3B8'
+                ];
+            })->values();
+
+        // Data for 6-Month Trend
+        $sixMonthTrend = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = \Carbon\Carbon::createFromDate($year, $month, 1)->subMonths($i);
+            $m = $date->month;
+            $y = $date->year;
+            $sDate = $date->endOfMonth()->toDateString();
+
+            $rev = Revenue::where('user_id', '=', $user->id, 'and')
+                ->where(function ($query) use ($m, $y, $sDate) {
+                    $query->where(function ($q) use ($m, $y) {
+                        $q->whereMonth('due_date', '=', $m)->whereYear('due_date', '=', $y);
+                    })->orWhere(function ($q) use ($sDate) {
+                        $q->where('is_recurrent', '=', true)->where('due_date', '<=', $sDate);
+                    });
+                })->sum('amount');
+
+            $exp = Expense::where('user_id', '=', $user->id, 'and')
+                ->where(function ($query) use ($m, $y, $sDate) {
+                    $query->where(function ($q) use ($m, $y) {
+                        $q->whereMonth('date', '=', $m)->whereYear('date', '=', $y);
+                    })->orWhere(function ($q) use ($sDate) {
+                        $q->where('is_recurrent', '=', true)->where('date', '<=', $sDate);
+                    });
+                })->sum('amount');
+
+            $sixMonthTrend[] = [
+                'month' => $date->translatedFormat('M'),
+                'revenue' => $rev,
+                'expense' => $exp
+            ];
+        }
+
         return view('mobile.analytics', compact(
             'totalRevenue',
             'totalExpenses',
@@ -130,7 +183,9 @@ class HomeController extends Controller
             'totalSavings',
             'balance',
             'month',
-            'year'
+            'year',
+            'expensesByCategory',
+            'sixMonthTrend'
         ));
     }
 }

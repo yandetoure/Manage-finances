@@ -234,11 +234,12 @@
             }
         </style>
 
-        <div class="settings-header">
+        <div class="settings-header" style="display: flex; justify-content: space-between; align-items: center;">
             <h2 class="text-bold">Paramètres</h2>
+            <span id="save-status" class="text-muted" style="font-size: 11px; display: none;">Sauvegarde...</span>
         </div>
 
-        <form action="{{ route('settings.update') }}" method="POST">
+        <form id="settings-form" action="{{ route('settings.update') }}" method="POST">
             @csrf
 
             <!-- SECTION: COMPTE -->
@@ -252,7 +253,7 @@
                     </div>
                     <div class="settings-row-right">
                         <input type="text" name="name" value="{{ auth()->user()->name }}" class="settings-input-ghost"
-                            required>
+                            required onchange="saveSettings()">
                     </div>
                 </div>
                 <div class="settings-row">
@@ -263,7 +264,7 @@
                     </div>
                     <div class="settings-row-right">
                         <input type="email" name="email" value="{{ auth()->user()->email }}" class="settings-input-ghost"
-                            required>
+                            required onchange="saveSettings()">
                     </div>
                 </div>
                 <a href="{{ route('analytics') }}" class="settings-row">
@@ -289,7 +290,7 @@
                     </div>
                     <div class="settings-row-right">
                         <label class="switch">
-                            <input type="checkbox" name="theme_mode" value="1" {{ $settings->theme == 'light' ? 'checked' : '' }}>
+                            <input type="checkbox" name="theme_mode" value="1" {{ $settings->theme == 'light' ? 'checked' : '' }} onchange="saveSettings()">
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -339,7 +340,7 @@
                         <span class="settings-label">Devise</span>
                     </div>
                     <div class="settings-row-right">
-                        <select name="currency" class="settings-select-ghost">
+                        <select name="currency" class="settings-select-ghost" onchange="saveSettings()">
                             <option value="FCFA" {{ $settings->currency == 'FCFA' ? 'selected' : '' }}>FCFA</option>
                             <option value="EUR" {{ $settings->currency == 'EUR' ? 'selected' : '' }}>EUR</option>
                             <option value="USD" {{ $settings->currency == 'USD' ? 'selected' : '' }}>USD</option>
@@ -357,7 +358,7 @@
                         <span class="settings-label">Langue</span>
                     </div>
                     <div class="settings-row-right">
-                        <select name="language" class="settings-select-ghost">
+                        <select name="language" class="settings-select-ghost" onchange="saveSettings()">
                             <option value="fr" {{ $settings->language == 'fr' ? 'selected' : '' }}>Français</option>
                             <option value="en" {{ $settings->language == 'en' ? 'selected' : '' }}>English</option>
                             <option value="es" {{ $settings->language == 'es' ? 'selected' : '' }}>Español</option>
@@ -378,7 +379,7 @@
                     </div>
                     <div class="settings-row-right">
                         <label class="switch">
-                            <input type="checkbox" name="notifications_enabled" value="1" {{ $settings->notifications_enabled ? 'checked' : '' }}>
+                            <input type="checkbox" name="notifications_enabled" value="1" {{ $settings->notifications_enabled ? 'checked' : '' }} onchange="saveSettings()">
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -396,9 +397,7 @@
                 @endif
             </div>
 
-            <div class="save-btn-container">
-                <button type="submit" class="btn-premium">Enregistrer les réglages</button>
-            </div>
+
         </form>
 
         <div style="margin-top: 25px; text-align: center; opacity: 0.5;">
@@ -414,6 +413,44 @@
                 document.querySelectorAll('.color-bubble').forEach(b => b.classList.remove('active'));
                 el.classList.add('active');
                 el.querySelector('input').checked = true;
+                saveSettings();
+            }
+
+            async function saveSettings() {
+                const form = document.getElementById('settings-form');
+                const status = document.getElementById('save-status');
+                const formData = new FormData(form);
+
+                status.style.display = 'block';
+                status.innerText = 'Sauvegarde...';
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (response.ok) {
+                        status.innerText = 'Enregistré ↑';
+                        setTimeout(() => {
+                            // Si le thème a changé, on recharge pour appliquer les variables CSS
+                            if (formData.has('theme_mode') || formData.has('accent_color')) {
+                                window.location.reload();
+                            } else {
+                                status.style.display = 'none';
+                            }
+                        }, 1000);
+                    } else {
+                        status.innerText = 'Erreur ❌';
+                        status.style.color = '#ef4444';
+                    }
+                } catch (error) {
+                    console.error('Error saving settings:', error);
+                    status.innerText = 'Erreur ❌';
+                }
             }
         </script>
 @endsection
