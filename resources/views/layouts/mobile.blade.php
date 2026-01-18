@@ -62,7 +62,12 @@
             --text-main: #111827;
             --text-muted: #6B7280;
             --input-bg: #ffffff;
-            --nav-bg: rgba(255, 255, 255, 0.8);
+            --nav-bg: rgba(255, 255, 255, 0.9);
+            --shadow-opacity: 0.15;
+        }
+
+        :root {
+            --shadow-opacity: 0.05;
         }
 
         body {
@@ -75,7 +80,7 @@
         .glass-card {
             background: var(--card-bg) !important;
             border: 1px solid var(--card-border) !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, var(--shadow-opacity)) !important;
         }
 
         .text-muted {
@@ -152,7 +157,7 @@
         .btn-primary, .btn-accent, .btn-premium {
             background: var(--accent-blue) !important;
             color: white !important;
-            box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.2) !important;
+            box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.35) !important;
         }
 
         .btn-primary:active, .btn-accent:active, .btn-premium:active {
