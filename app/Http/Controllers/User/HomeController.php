@@ -60,7 +60,7 @@ class HomeController extends Controller
         // Update User Profile
         $user->name = $validated['name'];
         $user->email = $validated['email'];
-        $user->save();
+        $user->save();  
 
         // Update User Settings
         $settings = $user->settings;
