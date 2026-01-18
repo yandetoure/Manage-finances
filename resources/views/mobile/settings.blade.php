@@ -235,21 +235,22 @@
         </style>
 
         <div class="settings-header" style="display: flex; justify-content: space-between; align-items: center;">
-            <h2 class="text-bold">Paramètres</h2>
-            <span id="save-status" class="text-muted" style="font-size: 11px; display: none;">Sauvegarde...</span>
+            <h2 class="text-bold">{{ __('Paramètres') }}</h2>
+            <span id="save-status" class="text-muted"
+                style="font-size: 11px; display: none;">{{ __('Sauvegarde...') }}</span>
         </div>
 
         <form id="settings-form" action="{{ route('settings.update') }}" method="POST">
             @csrf
 
             <!-- SECTION: COMPTE -->
-            <p class="settings-section-title">Compte</p>
+            <p class="settings-section-title">{{ __('Compte') }}</p>
             <div class="settings-group">
                 <div class="settings-row">
                     <div class="settings-row-left">
                         <div class="settings-icon-box"
                             style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">👤</div>
-                        <span class="settings-label">Nom complet</span>
+                        <span class="settings-label">{{ __('Nom complet') }}</span>
                     </div>
                     <div class="settings-row-right">
                         <input type="text" name="name" value="{{ auth()->user()->name }}" class="settings-input-ghost"
@@ -260,7 +261,7 @@
                     <div class="settings-row-left">
                         <div class="settings-icon-box"
                             style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">✉️</div>
-                        <span class="settings-label">Email</span>
+                        <span class="settings-label">{{ __('Email') }}</span>
                     </div>
                     <div class="settings-row-right">
                         <input type="email" name="email" value="{{ auth()->user()->email }}" class="settings-input-ghost"
@@ -271,22 +272,22 @@
                     <div class="settings-row-left">
                         <div class="settings-icon-box"
                             style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">📊</div>
-                        <span class="settings-label">Vision Globale</span>
+                        <span class="settings-label">{{ __('Vision Globale') }}</span>
                     </div>
                     <div class="settings-row-right">
-                        <span>Voir analyses</span>
+                        <span>{{ __('Voir analyses') }}</span>
                         <span>→</span>
                     </div>
                 </a>
             </div>
 
             <!-- SECTION: APPARENCE -->
-            <p class="settings-section-title">Apparence</p>
+            <p class="settings-section-title">{{ __('Apparence') }}</p>
             <div class="settings-group">
                 <div class="settings-row">
                     <div class="settings-row-left">
                         <div class="settings-icon-box" style="background: #fbbf2420; color: #fbbf24;">☀️</div>
-                        <span class="settings-label">Mode Clair</span>
+                        <span class="settings-label">{{ __('Mode Clair') }}</span>
                     </div>
                     <div class="settings-row-right">
                         <label class="switch">
@@ -300,7 +301,7 @@
                         <div class="settings-row-left">
                             <div class="settings-icon-box"
                                 style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">🎨</div>
-                            <span class="settings-label">Couleur d'accentuation</span>
+                            <span class="settings-label">{{ __("Couleur d'accentuation") }}</span>
                         </div>
                     </div>
                     <div style="padding: 16px;">
@@ -350,7 +351,7 @@
                         @foreach($paletteGroups as $groupName => $colors)
                             <p
                                 style="font-size: 10px; color: var(--text-muted); margin-bottom: 8px; {{ $loop->first ? '' : 'margin-top: 15px;' }}">
-                                {{ $groupName }}
+                                {{ __($groupName) }}
                             </p>
                             <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;">
                                 @foreach($colors as $key => $style)
@@ -367,12 +368,12 @@
             </div>
 
             <!-- SECTION: PRÉFÉRENCES -->
-            <p class="settings-section-title">Préférences</p>
+            <p class="settings-section-title">{{ __('Préférences') }}</p>
             <div class="settings-group">
                 <div class="settings-row">
                     <div class="settings-row-left">
                         <div class="settings-icon-box" style="background: #10b98120; color: #10b981;">💰</div>
-                        <span class="settings-label">Devise</span>
+                        <span class="settings-label">{{ __('Devise') }}</span>
                     </div>
                     <div class="settings-row-right">
                         <select name="currency" class="settings-select-ghost" onchange="saveSettings()">
@@ -390,7 +391,7 @@
                 <div class="settings-row">
                     <div class="settings-row-left">
                         <div class="settings-icon-box" style="background: #3b82f620; color: #3b82f6;">🌐</div>
-                        <span class="settings-label">Langue</span>
+                        <span class="settings-label">{{ __('Langue') }}</span>
                     </div>
                     <div class="settings-row-right">
                         <select name="language" class="settings-select-ghost" onchange="saveSettings()">
@@ -405,12 +406,12 @@
             </div>
 
             <!-- SECTION: SYSTÈME -->
-            <p class="settings-section-title">Système</p>
+            <p class="settings-section-title">{{ __('Système') }}</p>
             <div class="settings-group">
                 <div class="settings-row">
                     <div class="settings-row-left">
                         <div class="settings-icon-box" style="background: #f43f5e20; color: #f43f5e;">🔔</div>
-                        <span class="settings-label">Notifications</span>
+                        <span class="settings-label">{{ __('Notifications') }}</span>
                     </div>
                     <div class="settings-row-right">
                         <label class="switch">
@@ -423,7 +424,7 @@
                     <a href="{{ route('admin.dashboard') }}" class="settings-row">
                         <div class="settings-row-left">
                             <div class="settings-icon-box" style="background: #6366f120; color: #6366f1;">🛡️</div>
-                            <span class="settings-label">Administration</span>
+                            <span class="settings-label">{{ __('Administration') }}</span>
                         </div>
                         <div class="settings-row-right">
                             <span>→</span>
@@ -438,7 +439,7 @@
         <div style="margin-top: 25px; text-align: center; opacity: 0.5;">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="logout-btn">Déconnexion</button>
+                <button type="submit" class="logout-btn">{{ __('Déconnexion') }}</button>
             </form>
             <p style="font-size: 10px; margin-top: 15px;">Version 1.2.0 - Manage Premium</p>
         </div>
@@ -462,7 +463,7 @@
 
                 status.style.display = 'block';
                 status.style.color = 'var(--text-muted)';
-                status.innerText = 'Sauvegarde...';
+                status.innerText = '{{ __('Sauvegarde...') }}';
 
                 try {
                     const response = await fetch(form.action, {
@@ -475,7 +476,7 @@
                     });
 
                     if (response.ok) {
-                        status.innerText = 'Enregistré ↑';
+                        status.innerText = '{{ __('Enregistré ↑') }}';
 
                         const newAccent = formData.get('accent_color');
                         const newTheme = formData.has('theme_mode') ? 'light' : 'dark';
@@ -490,13 +491,13 @@
                         }, 1000);
                     } else {
                         const errorData = await response.json();
-                        status.innerText = 'Erreur ❌';
+                        status.innerText = '{{ __('Erreur ❌') }}';
                         status.style.color = '#ef4444';
                         console.error('Validation failed:', errorData);
                     }
                 } catch (error) {
                     console.error('Error saving settings:', error);
-                    status.innerText = 'Erreur ❌';
+                    status.innerText = '{{ __('Erreur ❌') }}';
                     status.style.color = '#ef4444';
                 }
             }

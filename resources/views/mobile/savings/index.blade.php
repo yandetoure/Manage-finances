@@ -2,25 +2,25 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-                            menuOpen: false, 
-                            activeSaving: null, 
-                            contributionOpen: false,
-                            historyOpen: false,
-                            openMenu(saving) {
-                                this.activeSaving = saving;
-                                this.menuOpen = true;
-                                this.historyOpen = false;
-                            },
-                            closeMenu() {
-                                this.menuOpen = false;
-                                this.contributionOpen = false;
-                            }
-                        }">
+                                    menuOpen: false, 
+                                    activeSaving: null, 
+                                    contributionOpen: false,
+                                    historyOpen: false,
+                                    openMenu(saving) {
+                                        this.activeSaving = saving;
+                                        this.menuOpen = true;
+                                        this.historyOpen = false;
+                                    },
+                                    closeMenu() {
+                                        this.menuOpen = false;
+                                        this.contributionOpen = false;
+                                    }
+                                }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 class="text-bold">Mon Épargne</h2>
+            <h2 class="text-bold">{{ __('Mon Épargne') }}</h2>
             <a href="{{ route('savings.create') }}" class="btn btn-accent"
                 style="padding: 10px 18px; border-radius: 14px; font-size: 13px;">+
-                Nouveau</a>
+                {{ __('Nouveau') }}</a>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px;">
@@ -41,7 +41,7 @@
                                 <span class="text-bold"
                                     style="font-size: 15px; display: block;">{{ $saving->target_name }}</span>
                                 <span class="text-muted"
-                                    style="font-size: 10px;">{{ $saving->category->name ?? 'Sans catégorie' }}</span>
+                                    style="font-size: 10px;">{{ $saving->category->translated_name ?? __('Sans catégorie') }}</span>
                             </div>
                         </div>
                         <span
@@ -60,10 +60,10 @@
                             <span
                                 style="font-size: 15px; color: var(--accent-blue); font-weight: 700;">{{ number_format($saving->contributions->sum('amount'), 0, ',', ' ') }}
                                 {{ auth()->user()->currency }}</span>
-                            <p class="text-muted" style="font-size: 9px; margin-top: -2px;">Total épargné</p>
+                            <p class="text-muted" style="font-size: 9px; margin-top: -2px;">{{ __('Total épargné') }}</p>
                         </div>
                         <div style="text-align: right;">
-                            <span style="font-size: 11px; color: var(--text-muted);">Reste:
+                            <span style="font-size: 11px; color: var(--text-muted);">{{ __('Reste:') }}
                                 {{ number_format($saving->target_amount - $saving->contributions->sum('amount'), 0, ',', ' ') }}
                                 {{ auth()->user()->currency }}</span>
                         </div>
@@ -71,7 +71,7 @@
                 </div>
             @empty
                 <div class="glass-card" style="text-align: center; padding: 40px 20px;">
-                    <p class="text-muted">Aucun projet d'épargne en cours.</p>
+                    <p class="text-muted">{{ __("Aucun projet d'épargne en cours.") }}</p>
                 </div>
             @endforelse
         </div>
@@ -99,7 +99,7 @@
                             x-text="new Intl.NumberFormat().format(activeSaving.current_amount) + ' {{ auth()->user()->currency }}'">
                         </p>
                         <p class="text-muted" style="font-size: 13px; margin-top: 5px;">
-                            Reste à épargner: <span style="color: #3b82f6; font-weight: 600;"
+                            {{ __('Reste à épargner:') }} <span style="color: #3b82f6; font-weight: 600;"
                                 x-text="new Intl.NumberFormat().format(activeSaving.target_amount - activeSaving.current_amount) + ' {{ auth()->user()->currency }}'"></span>
                         </p>
                     </div>
@@ -109,26 +109,28 @@
                         <button @click="contributionOpen = true" class="action-card"
                             style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); grid-column: span 2;">
                             <span style="font-size: 20px; margin-bottom: 5px; display: block;">💰</span>
-                            <span style="font-weight: 600; color: #10b981;">Épargner</span>
+                            <span style="font-weight: 600; color: #10b981;">{{ __('Épargner') }}</span>
                         </button>
 
                         <button @click="historyOpen = !historyOpen" class="action-card"
                             :style="historyOpen ? 'background: rgba(255,255,255,0.15);' : ''">
                             <span style="font-size: 20px; margin-bottom: 5px; display: block;">📜</span>
-                            <span style="font-weight: 600;">Historique</span>
+                            <span style="font-weight: 600;">{{ __('Historique') }}</span>
                         </button>
 
                         <a :href="'/savings/' + activeSaving.id + '/edit'" class="action-card"
                             style="text-decoration: none; color: white;">
                             <span style="font-size: 20px; margin-bottom: 5px; display: block;">✏️</span>
-                            <span style="font-weight: 600;">Modifier</span>
+                            <span style="font-weight: 600;">{{ __('Modifier') }}</span>
                         </a>
                     </div>
 
                     <!-- History Section -->
                     <div x-show="historyOpen" x-transition:enter="fade-in"
                         style="background: rgba(255,255,255,0.03); border-radius: 20px; padding: 20px; margin-top: 10px;">
-                        <h4 class="text-bold" style="font-size: 15px; margin-bottom: 15px;">Historique des économies</h4>
+                        <h4 class="text-bold" style="font-size: 15px; margin-bottom: 15px;">
+                            {{ __('Historique des économies') }}
+                        </h4>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <template x-if="activeSaving.contributions && activeSaving.contributions.length > 0">
                                 <template x-for="contribution in activeSaving.contributions" :key="contribution.id">
@@ -143,13 +145,13 @@
                                             </p>
                                         </div>
                                         <span
-                                            style="font-size: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 2px 8px; border-radius: 20px;">Ajouté</span>
+                                            style="font-size: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 2px 8px; border-radius: 20px;">{{ __('Ajouté') }}</span>
                                     </div>
                                 </template>
                             </template>
                             <template x-if="!activeSaving.contributions || activeSaving.contributions.length === 0">
                                 <div style="text-align: center; padding: 20px;">
-                                    <p class="text-muted" style="font-size: 13px;">Aucune économie trouvée</p>
+                                    <p class="text-muted" style="font-size: 13px;">{{ __('Aucune économie trouvée') }}</p>
                                 </div>
                             </template>
                         </div>
@@ -163,8 +165,8 @@
             x-transition:enter="fade-in" x-transition:leave="fade-out">
             <div class="glass-card" @click.stop
                 style="max-width: 90%; width: 350px; margin: auto; padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15);">
-                <h3 class="text-bold" style="margin-bottom: 5px; font-size: 18px;">Ajouter à l'épargne</h3>
-                <p class="text-muted" style="font-size: 12px; margin-bottom: 25px;">Économisez pour <span
+                <h3 class="text-bold" style="margin-bottom: 5px; font-size: 18px;">{{ __('Ajouter à l\'épargne') }}</h3>
+                <p class="text-muted" style="font-size: 12px; margin-bottom: 25px;">{{ __('Économisez pour') }} <span
                         x-text="activeSaving?.target_name" style="color: white; font-weight: 600;"></span></p>
 
                 <form action="{{ route('savings.contribute') }}" method="POST">
@@ -173,7 +175,7 @@
 
                     <div style="margin-bottom: 18px;">
                         <label class="text-muted"
-                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Montant</label>
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">{{ __('Montant') }}</label>
                         <input type="number" name="amount" required step="0.01" class="input-modern"
                             style="width: 100%; font-size: 16px; font-weight: 600;"
                             placeholder="0 {{ auth()->user()->currency }}">
@@ -181,16 +183,16 @@
 
                     <div style="margin-bottom: 25px;">
                         <label class="text-muted"
-                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Date</label>
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">{{ __('Date') }}</label>
                         <input type="date" name="contribution_date" required value="{{ date('Y-m-d') }}"
                             class="input-modern" style="width: 100%;">
                     </div>
 
                     <div style="display: flex; gap: 12px;">
                         <button type="button" @click="contributionOpen = false" class="btn"
-                            style="flex: 1; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 12px;">Annuler</button>
+                            style="flex: 1; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 12px;">{{ __('Annuler') }}</button>
                         <button type="submit" class="btn btn-accent"
-                            style="flex: 1; justify-content: center; border-radius: 12px; background: #10b981;">Confirmer</button>
+                            style="flex: 1; justify-content: center; border-radius: 12px; background: #10b981;">{{ __('Confirmer') }}</button>
                     </div>
                 </form>
             </div>

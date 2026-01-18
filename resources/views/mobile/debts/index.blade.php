@@ -2,25 +2,25 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-                                menuOpen: false, 
-                                activeDebt: null, 
-                                repaymentOpen: false,
-                                historyOpen: false,
-                                openMenu(debt) {
-                                    this.activeDebt = debt;
-                                    this.menuOpen = true;
-                                    this.historyOpen = false;
-                                },
-                                closeMenu() {
-                                    this.menuOpen = false;
-                                    this.repaymentOpen = false;
-                                }
-                            }">
+                                    menuOpen: false, 
+                                    activeDebt: null, 
+                                    repaymentOpen: false,
+                                    historyOpen: false,
+                                    openMenu(debt) {
+                                        this.activeDebt = debt;
+                                        this.menuOpen = true;
+                                        this.historyOpen = false;
+                                    },
+                                    closeMenu() {
+                                        this.menuOpen = false;
+                                        this.repaymentOpen = false;
+                                    }
+                                }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 class="text-bold">Mes Dettes</h2>
+            <h2 class="text-bold">{{ __('Mes Dettes') }}</h2>
             <a href="{{ route('debts.create') }}" class="btn btn-accent"
                 style="padding: 10px 18px; border-radius: 14px; font-size: 13px;">+
-                Nouvelle</a>
+                {{ __('Nouvelle') }}</a>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 15px;">
@@ -41,7 +41,7 @@
                         <div>
                             <p class="text-bold" style="font-size: 15px;">{{ $debt->creditor }}</p>
                             <p class="text-muted" style="font-size: 11px;">
-                                {{ $debt->due_date ? 'Échéance: ' . \Carbon\Carbon::parse($debt->due_date)->format('d M Y') : 'Pas d\'échéance' }}
+                                {{ $debt->due_date ? __('Échéance:') . ' ' . \Carbon\Carbon::parse($debt->due_date)->translatedFormat('d M Y') : __("Pas d'échéance") }}
                             </p>
                         </div>
                     </div>
@@ -50,16 +50,16 @@
                             {{ number_format($debt->remaining, 0, ',', ' ') }}
                             {{ auth()->user()->currency }}
                         </p>
-                        <p class="text-muted" style="font-size: 9px; margin-top: -2px;">Reste à payer</p>
+                        <p class="text-muted" style="font-size: 9px; margin-top: -2px;">{{ __('Reste à payer') }}</p>
                         <span
                             style="font-size: 10px; background: {{ $debt->status == 'paid' ? 'rgba(16, 185, 129, 0.15)' : ($debt->status == 'late' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)') }}; color: {{ $debt->status == 'paid' ? '#10b981' : ($debt->status == 'late' ? '#ef4444' : '#f59e0b') }}; padding: 1px 6px; border-radius: 6px; font-weight: 600;">
-                            {{ $debt->status == 'paid' ? 'Payée' : ($debt->status == 'late' ? 'En retard' : 'En attente') }}
+                            {{ $debt->status == 'paid' ? __('Payée') : ($debt->status == 'late' ? __('En retard') : __('En attente')) }}
                         </span>
                     </div>
                 </div>
             @empty
                 <div class="glass-card" style="text-align: center; padding: 40px 20px;">
-                    <p class="text-muted">Aucune dette enregistrée.</p>
+                    <p class="text-muted">{{ __('Aucune dette enregistrée.') }}</p>
                 </div>
             @endforelse
         </div>
@@ -84,7 +84,7 @@
                         </p>
                         <template x-if="activeDebt.total_paid > 0">
                             <p class="text-muted" style="font-size: 13px; margin-top: 5px;">
-                                Reste à payer: <span style="color: #ef4444; font-weight: 600;"
+                                {{ __('Reste à payer:') }} <span style="color: #ef4444; font-weight: 600;"
                                     x-text="new Intl.NumberFormat().format(activeDebt.remaining) + ' {{ auth()->user()->currency }}'"></span>
                             </p>
                         </template>
@@ -98,21 +98,21 @@
                                 <input type="hidden" name="status" value="pending">
                                 <button type="submit"
                                     :class="activeDebt.status == 'pending' ? 'status-pill-active active-pending' : 'status-pill'"
-                                    style="width: 100%;">En attente</button>
+                                    style="width: 100%;">{{ __('En attente') }}</button>
                             </form>
                             <form :action="'/debts/' + activeDebt.id + '/status'" method="POST" style="flex: 1;">
                                 @csrf
                                 <input type="hidden" name="status" value="paid">
                                 <button type="submit"
                                     :class="activeDebt.status == 'paid' ? 'status-pill-active active-paid' : 'status-pill'"
-                                    style="width: 100%;">Payée</button>
+                                    style="width: 100%;">{{ __('Payée') }}</button>
                             </form>
                             <form :action="'/debts/' + activeDebt.id + '/status'" method="POST" style="flex: 1;">
                                 @csrf
                                 <input type="hidden" name="status" value="late">
                                 <button type="submit"
                                     :class="activeDebt.status == 'late' ? 'status-pill-active active-late' : 'status-pill'"
-                                    style="width: 100%;">Retard</button>
+                                    style="width: 100%;">{{ __('Retard') }}</button>
                             </form>
                         </div>
                     </div>
@@ -122,26 +122,27 @@
                         <button @click="repaymentOpen = true" class="action-card"
                             style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); grid-column: span 2;">
                             <span style="font-size: 20px; margin-bottom: 5px; display: block;">💸</span>
-                            <span style="font-weight: 600; color: #a855f7;">Rembourser</span>
+                            <span style="font-weight: 600; color: #a855f7;">{{ __('Rembourser') }}</span>
                         </button>
 
                         <button @click="historyOpen = !historyOpen" class="action-card"
                             :style="historyOpen ? 'background: rgba(255,255,255,0.15);' : ''">
                             <span style="font-size: 20px; margin-bottom: 5px; display: block;">📜</span>
-                            <span style="font-weight: 600;">Historique</span>
+                            <span style="font-weight: 600;">{{ __('Historique') }}</span>
                         </button>
 
                         <a :href="'/debts/' + activeDebt.id + '/edit'" class="action-card"
                             style="text-decoration: none; color: white;">
                             <span style="font-size: 20px; margin-bottom: 5px; display: block;">✏️</span>
-                            <span style="font-weight: 600;">Modifier</span>
+                            <span style="font-weight: 600;">{{ __('Modifier') }}</span>
                         </a>
                     </div>
 
                     <!-- History Section -->
                     <div x-show="historyOpen" x-transition:enter="fade-in"
                         style="background: rgba(255,255,255,0.03); border-radius: 20px; padding: 20px; margin-top: 10px;">
-                        <h4 class="text-bold" style="font-size: 15px; margin-bottom: 15px;">Historique des paiements</h4>
+                        <h4 class="text-bold" style="font-size: 15px; margin-bottom: 15px;">
+                            {{ __('Historique des paiements') }}</h4>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <template x-if="activeDebt.payments && activeDebt.payments.length > 0">
                                 <template x-for="payment in activeDebt.payments" :key="payment.id">
@@ -156,13 +157,13 @@
                                             </p>
                                         </div>
                                         <span
-                                            style="font-size: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 2px 8px; border-radius: 20px;">Effectué</span>
+                                            style="font-size: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 2px 8px; border-radius: 20px;">{{ __('Effectué') }}</span>
                                     </div>
                                 </template>
                             </template>
                             <template x-if="!activeDebt.payments || activeDebt.payments.length === 0">
                                 <div style="text-align: center; padding: 20px;">
-                                    <p class="text-muted" style="font-size: 13px;">Aucun paiement trouvé</p>
+                                    <p class="text-muted" style="font-size: 13px;">{{ __('Aucun paiement trouvé') }}</p>
                                 </div>
                             </template>
                         </div>
@@ -176,9 +177,10 @@
             x-transition:enter="fade-in" x-transition:leave="fade-out">
             <div class="glass-card" @click.stop
                 style="max-width: 90%; width: 350px; margin: auto; padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15);">
-                <h3 class="text-bold" style="margin-bottom: 5px; font-size: 18px;">Enregistrer un paiement</h3>
-                <p class="text-muted" style="font-size: 12px; margin-bottom: 25px;">Ajouter un remboursement pour <span
-                        x-text="activeDebt?.creditor" style="color: white; font-weight: 600;"></span></p>
+                <h3 class="text-bold" style="margin-bottom: 5px; font-size: 18px;">{{ __('Enregistrer un paiement') }}</h3>
+                <p class="text-muted" style="font-size: 12px; margin-bottom: 25px;">
+                    {{ __('Ajouter un remboursement pour') }} <span x-text="activeDebt?.creditor"
+                        style="color: white; font-weight: 600;"></span></p>
 
                 <form action="{{ route('debts.pay') }}" method="POST">
                     @csrf
@@ -186,8 +188,7 @@
 
                     <div style="margin-bottom: 18px;">
                         <label class="text-muted"
-                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Montant
-                            à payer</label>
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">{{ __('Montant à payer') }}</label>
                         <input type="number" name="amount" required step="0.01" class="input-modern"
                             style="width: 100%; font-size: 16px; font-weight: 600;"
                             placeholder="0 {{ auth()->user()->currency }}">
@@ -195,17 +196,16 @@
 
                     <div style="margin-bottom: 25px;">
                         <label class="text-muted"
-                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Date
-                            du paiement</label>
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">{{ __('Date du paiement') }}</label>
                         <input type="date" name="payment_date" required value="{{ date('Y-m-d') }}" class="input-modern"
                             style="width: 100%;">
                     </div>
 
                     <div style="display: flex; gap: 12px;">
                         <button type="button" @click="repaymentOpen = false" class="btn"
-                            style="flex: 1; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 12px;">Annuler</button>
+                            style="flex: 1; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 12px;">{{ __('Annuler') }}</button>
                         <button type="submit" class="btn btn-accent"
-                            style="flex: 1; justify-content: center; border-radius: 12px;">Confirmer</button>
+                            style="flex: 1; justify-content: center; border-radius: 12px;">{{ __('Confirmer') }}</button>
                     </div>
                 </form>
             </div>

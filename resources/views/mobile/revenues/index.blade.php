@@ -2,20 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{
-                    menuOpen: false,
-                    activeRevenue: null,
-                    openMenu(revenue) {
-                        this.activeRevenue = revenue;
-                        this.menuOpen = true;
-                    },
-                    closeMenu() {
-                        this.menuOpen = false;
-                    }
-                }">
+                            menuOpen: false,
+                            activeRevenue: null,
+                            openMenu(revenue) {
+                                this.activeRevenue = revenue;
+                                this.menuOpen = true;
+                            },
+                            closeMenu() {
+                                this.menuOpen = false;
+                            }
+                        }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 class="text-bold">Mes Revenus</h2>
+            <h2 class="text-bold">{{ __('Mes Revenus') }}</h2>
             <a href="{{ route('revenues.create') }}" class="btn btn-accent"
-                style="padding: 10px 18px; border-radius: 14px; font-size: 13px;">+ Nouveau</a>
+                style="padding: 10px 18px; border-radius: 14px; font-size: 13px;">+ {{ __('Nouveau') }}</a>
         </div>
 
         @forelse($revenues as $revenue)
@@ -30,7 +30,8 @@
                     <div>
                         <p class="text-bold">{{ $revenue->source }}</p>
                         <p class="text-muted" style="font-size: 11px;">
-                            {{ $revenue->category->name ?? 'Sans catégorie' }} • {{ $revenue->due_date ?? 'Pas de date' }}
+                            {{ $revenue->category->translated_name ?? __('Sans catégorie') }} •
+                            {{ $revenue->due_date ?? __('Pas de date') }}
                         </p>
                     </div>
                 </div>
@@ -40,13 +41,13 @@
                     </p>
                     @if($revenue->is_recurrent)
                         <span
-                            style="font-size: 10px; background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); padding: 2px 6px; border-radius: 10px;">Récurrent</span>
+                            style="font-size: 10px; background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); padding: 2px 6px; border-radius: 10px;">{{ __('Récurrent') }}</span>
                     @endif
                 </div>
             </div>
         @empty
             <div class="glass-card" style="text-align: center; padding: 40px 20px;">
-                <p class="text-muted">Aucun revenu enregistré.</p>
+                <p class="text-muted">{{ __('Aucun revenu enregistré.') }}</p>
             </div>
         @endforelse
 
@@ -73,7 +74,7 @@
                             x-text="new Intl.NumberFormat().format(activeRevenue.amount) + ' {{ auth()->user()->currency }}'">
                         </p>
                         <p class="text-muted" style="font-size: 13px; margin-top: 5px;">
-                            <span x-text="activeRevenue.category?.name || 'Sans catégorie'"></span> • <span
+                            <span x-text="activeRevenue.category?.name || '{{ __('Sans catégorie') }}'"></span> • <span
                                 x-text="activeRevenue.due_date"></span>
                         </p>
                     </div>
@@ -83,18 +84,18 @@
                         <a :href="'/revenues/' + activeRevenue.id + '/edit'" class="action-card"
                             style="text-decoration: none; color: white;">
                             <span style="font-size: 20px; margin-bottom: 5px; display: block;">✏️</span>
-                            <span style="font-weight: 600;">Modifier</span>
+                            <span style="font-weight: 600;">{{ __('Modifier') }}</span>
                         </a>
 
                         <form :action="'/revenues/' + activeRevenue.id" method="POST"
-                            onsubmit="return confirm('Êtes-vous sûr ?');" class="action-card"
+                            onsubmit="return confirm('{{ __('Êtes-vous sûr ?') }}');" class="action-card"
                             style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: #ef4444; margin: 0;">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
                                 style="background: none; border: none; color: inherit; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
                                 <span style="font-size: 20px; margin-bottom: 5px; display: block;">🗑️</span>
-                                <span style="font-weight: 600;">Supprimer</span>
+                                <span style="font-weight: 600;">{{ __('Supprimer') }}</span>
                             </button>
                         </form>
                     </div>

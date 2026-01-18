@@ -2,23 +2,23 @@
 
 @section('content')
     <div class="fade-in" x-data="{
-                menuOpen: false,
-                activeTransaction: null,
-                openMenu(transaction) {
-                    this.activeTransaction = transaction;
-                    this.menuOpen = true;
-                },
-                closeMenu() {
-                    this.menuOpen = false;
-                }
-            }">
+                    menuOpen: false,
+                    activeTransaction: null,
+                    openMenu(transaction) {
+                        this.activeTransaction = transaction;
+                        this.menuOpen = true;
+                    },
+                    closeMenu() {
+                        this.menuOpen = false;
+                    }
+                }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 class="text-bold">Transactions</h2>
+            <h2 class="text-bold">{{ __('Transactions') }}</h2>
             <div style="display: flex; gap: 10px;">
                 <a href="{{ route('revenues.create') }}" class="btn btn-accent"
-                    style="padding: 8px 12px; font-size: 12px;">+ Revenu</a>
+                    style="padding: 8px 12px; font-size: 12px;">+ {{ __('Revenu') }}</a>
                 <a href="{{ route('expenses.create') }}" class="btn btn-primary"
-                    style="padding: 8px 12px; font-size: 12px;">+ Dépense</a>
+                    style="padding: 8px 12px; font-size: 12px;">+ {{ __('Dépense') }}</a>
             </div>
         </div>
 
@@ -39,7 +39,7 @@
 
         @if($transactions->isEmpty())
             <div class="glass-card" style="text-align: center; padding: 40px 20px;">
-                <p class="text-muted">Aucune transaction trouvée.</p>
+                <p class="text-muted">{{ __('Aucune transaction trouvée.') }}</p>
             </div>
         @else
             <div style="display: flex; flex-direction: column; gap: 15px;">
@@ -57,7 +57,7 @@
                                     {{ $item->type == 'revenue' ? $item->source : ($item->category->name ?? $item->category) }}
                                 </p>
                                 <p class="text-muted" style="font-size: 11px;">
-                                    {{ $item->category->name ?? ($item->type == 'revenue' ? 'Revenu' : 'Dépense') }} •
+                                    {{ $item->category->name ?? ($item->type == 'revenue' ? __('Revenu') : __('Dépense')) }} •
                                     {{ \Carbon\Carbon::parse($item->tx_date)->translatedFormat('d M Y') }}
                                 </p>
                             </div>
@@ -104,7 +104,7 @@
 
                         <p class="text-muted" style="font-size: 13px; margin-top: 5px;">
                             <span
-                                x-text="activeTransaction.category?.name || (activeTransaction.type == 'revenue' ? 'Revenu' : 'Dépense')"></span>
+                                x-text="activeTransaction.category?.name || (activeTransaction.type == 'revenue' ? '{{ __('Revenu') }}' : '{{ __('Dépense') }}')"></span>
                             •
                             <span
                                 x-text="new Date(activeTransaction.tx_date).toLocaleDateString('fr-FR', {day: 'numeric', month: 'long', year: 'numeric'})"></span>
@@ -116,19 +116,19 @@
                         <a :href="(activeTransaction.type == 'revenue' ? '/revenues/' : '/expenses/') + activeTransaction.id + '/edit'"
                             class="action-card" style="text-decoration: none; color: var(--text-main);">
                             <span style="font-size: 20px; margin-bottom: 5px; display: block;">✏️</span>
-                            <span style="font-weight: 600;">Modifier</span>
+                            <span style="font-weight: 600;">{{ __('Modifier') }}</span>
                         </a>
 
                         <form
                             :action="(activeTransaction.type == 'revenue' ? '/revenues/' : '/expenses/') + activeTransaction.id"
-                            method="POST" onsubmit="return confirm('Êtes-vous sûr ?');" class="action-card"
+                            method="POST" onsubmit="return confirm('{{ __('Êtes-vous sûr ?') }}');" class="action-card"
                             style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: #ef4444; margin: 0;">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
                                 style="background: none; border: none; color: inherit; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
                                 <span style="font-size: 20px; margin-bottom: 5px; display: block;">🗑️</span>
-                                <span style="font-weight: 600;">Supprimer</span>
+                                <span style="font-weight: 600;">{{ __('Supprimer') }}</span>
                             </button>
                         </form>
                     </div>
