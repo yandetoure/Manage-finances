@@ -7,7 +7,7 @@
             
             <form action="{{ route('analytics') }}" method="GET" id="filterForm">
                 <select name="month" onchange="document.getElementById('filterForm').submit()" 
-                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 12px; border-radius: 12px; font-size: 14px; outline: none;">
+                    style="background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 8px 12px; border-radius: 12px; font-size: 14px; outline: none;">
                     @foreach(range(1, 12) as $m)
                         <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
                             {{ Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
@@ -15,7 +15,7 @@
                     @endforeach
                 </select>
                 <select name="year" onchange="document.getElementById('filterForm').submit()"
-                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 12px; border-radius: 12px; font-size: 14px; outline: none;">
+                    style="background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 8px 12px; border-radius: 12px; font-size: 14px; outline: none;">
                     @foreach(range(now()->year - 2, now()->year + 1) as $y)
                         <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
                     @endforeach
@@ -49,13 +49,13 @@
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 12px;">
-                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--card-border);">
                     <span class="text-muted" style="font-size: 13px;">Solde Net (Revenus - Dépenses)</span>
                     <span class="text-bold {{ $balance >= 0 ? 'text-green' : 'text-red' }}" style="font-size: 13px; color: {{ $balance >= 0 ? 'var(--primary-green)' : '#ef4444' }};">
                         {{ $balance >= 0 ? '+' : '' }} {{ number_format($balance, 0, ',', ' ') }} {{ auth()->user()->currency }}
                     </span>
                 </div>
-                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--card-border);">
                     <span class="text-muted" style="font-size: 13px;">Taux d'épargne</span>
                     <span class="text-bold" style="font-size: 13px;">
                         @if($totalRevenue > 0)
@@ -67,7 +67,7 @@
                 </div>
             </div>
             
-            <a href="{{ route('home') }}" class="btn btn-primary" style="width: 100%; margin-top: 20px; text-align: center; border-radius: 12px; font-size: 14px;">Retour au Dashboard</a>
+            <a href="{{ route('home') }}" class="btn btn-primary" style="width: 100%; margin-top: 20px; text-align: center; border-radius: 18px; padding: 16px; font-size: 15px; font-weight: 700;">Retour au Dashboard</a>
         </div>
     </div>
 @endsection

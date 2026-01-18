@@ -3,21 +3,23 @@
 @section('content')
     <div class="fade-in">
         <!-- Main Balance Card -->
-        <div class="glass-card" style="background: linear-gradient(135deg, var(--accent-blue), #1e293b); border: none;">
-            <p class="text-muted" style="color: rgba(255,255,255,0.7);">Solde Total</p>
+        <div class="glass-card"
+            style="background: var(--accent-blue); border: none; color: white;">
+            <p style="opacity: 0.8; font-size: 14px;">Solde Total</p>
             <h2 class="text-bold" style="font-size: 32px; margin-top: 5px;">{{ number_format($balance, 0, ',', ' ') }}
                 {{ auth()->user()->currency }}
             </h2>
             <div style="margin-top: 15px; display: flex; gap: 10px;">
-                <span class="text-green"
-                    style="background: rgba(16, 185, 129, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 12px;">+2.4%
+                <span
+                    style="background: rgba(255, 255, 255, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">+2.4%
                     ce mois</span>
             </div>
         </div>
 
         <!-- Summary Grid -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <a href="{{ route('claims.index') }}" class="glass-card" style="margin-bottom: 0; text-decoration: none; border-left: 4px solid var(--accent-blue);">
+            <a href="{{ route('claims.index') }}" class="glass-card"
+                style="margin-bottom: 0; text-decoration: none; border-left: 4px solid var(--accent-blue);">
                 <p class="text-muted" style="font-size: 12px;">Créances (Reste)</p>
                 <p class="text-bold" style="color: var(--accent-blue);">{{ number_format($totalClaims, 0, ',', ' ') }}
                     {{ auth()->user()->currency }}
@@ -44,33 +46,33 @@
             <p class="text-bold" style="margin-bottom: 15px;">Actions Rapides</p>
             <div style="display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px;">
                 <a href="{{ route('revenues.create') }}" class="glass-card"
-                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
-                    <span style="font-size: 24px; margin-bottom: 5px;">📥</span>
+                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none; border: 1px solid var(--card-border);">
+                    <div style="width: 45px; height: 45px; border-radius: 14px; background: rgba(var(--accent-rgb), 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: var(--accent-blue);">📥</div>
                     <span class="text-muted" style="font-size: 12px;">Ajouter Revenu</span>
                 </a>
                 <a href="{{ route('expenses.create') }}" class="glass-card"
-                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
-                    <span style="font-size: 24px; margin-bottom: 5px;">📤</span>
+                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none; border: 1px solid var(--card-border);">
+                    <div style="width: 45px; height: 45px; border-radius: 14px; background: rgba(239, 68, 68, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: #ef4444;">📤</div>
                     <span class="text-muted" style="font-size: 12px;">Dépense</span>
                 </a>
                 <a href="{{ route('debts.create') }}" class="glass-card"
-                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
-                    <span style="font-size: 24px; margin-bottom: 5px;">💸</span>
+                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none; border: 1px solid var(--card-border);">
+                    <div style="width: 45px; height: 45px; border-radius: 14px; background: rgba(var(--accent-rgb), 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: var(--accent-blue);">💸</div>
                     <span class="text-muted" style="font-size: 12px;">Rembourser</span>
                 </a>
                 <a href="{{ route('claims.create') }}" class="glass-card"
-                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
-                    <span style="font-size: 24px; margin-bottom: 5px;">💰</span>
+                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none; border: 1px solid var(--card-border);">
+                    <div style="width: 45px; height: 45px; border-radius: 14px; background: rgba(var(--accent-rgb), 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: var(--accent-blue);">💰</div>
                     <span class="text-muted" style="font-size: 12px;">Prêter</span>
                 </a>
                 <a href="{{ route('savings.create') }}" class="glass-card"
-                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
-                    <span style="font-size: 24px; margin-bottom: 5px;">🏦</span>
+                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none; border: 1px solid var(--card-border);">
+                    <div style="width: 45px; height: 45px; border-radius: 14px; background: rgba(var(--accent-rgb), 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: var(--accent-blue);">🏦</div>
                     <span class="text-muted" style="font-size: 12px;">Épargner</span>
                 </a>
                 <a href="{{ route('forecasts.create') }}" class="glass-card"
-                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none;">
-                    <span style="font-size: 24px; margin-bottom: 5px;">📊</span>
+                    style="min-width: 120px; display: flex; flex-direction: column; align-items: center; text-decoration: none; border: 1px solid var(--card-border);">
+                    <div style="width: 45px; height: 45px; border-radius: 14px; background: rgba(var(--accent-rgb), 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: var(--accent-blue);">📊</div>
                     <span class="text-muted" style="font-size: 12px;">Prévoir</span>
                 </a>
             </div>
@@ -107,7 +109,12 @@
                 plugins: { legend: { display: false } },
                 scales: {
                     y: { display: false },
-                    x: { grid: { display: false }, ticks: { color: '#94A3B8' } }
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#94A3B8'
+                        }
+                    }
                 }
             }
         });

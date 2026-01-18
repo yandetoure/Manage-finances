@@ -16,26 +16,19 @@
                 font-weight: 700;
                 text-transform: uppercase;
                 letter-spacing: 1px;
-                color: rgba(255, 255, 255, 0.4);
+                color: var(--text-muted);
                 margin: 25px 0 10px 15px;
+                opacity: 0.7;
             }
 
-            .light-mode .settings-section-title {
-                color: rgba(0, 0, 0, 0.4);
-            }
+
 
             .settings-group {
-                background: rgba(255, 255, 255, 0.03);
-                border: 1px solid rgba(255, 255, 255, 0.05);
+                background: var(--card-bg);
+                border: 1px solid var(--card-border);
                 border-radius: 20px;
                 overflow: hidden;
                 margin-bottom: 10px;
-            }
-
-            .light-mode .settings-group {
-                background: #ffffff;
-                border: 1px solid rgba(0, 0, 0, 0.05);
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
             }
 
             .settings-row {
@@ -43,9 +36,9 @@
                 align-items: center;
                 justify-content: space-between;
                 padding: 14px 16px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+                border-bottom: 1px solid var(--card-border);
                 text-decoration: none;
-                color: inherit;
+                color: var(--text-main);
                 transition: background 0.2s;
             }
 
@@ -54,15 +47,7 @@
             }
 
             .settings-row:active {
-                background: rgba(255, 255, 255, 0.05);
-            }
-
-            .light-mode .settings-row:active {
-                background: rgba(0, 0, 0, 0.02);
-            }
-
-            .light-mode .settings-row {
-                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+                background: rgba(var(--accent-rgb), 0.05);
             }
 
             .settings-row-left {
@@ -91,18 +76,14 @@
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                color: rgba(255, 255, 255, 0.4);
+                color: var(--text-muted);
                 font-size: 13px;
-            }
-
-            .light-mode .settings-row-right {
-                color: rgba(0, 0, 0, 0.4);
             }
 
             .settings-input-ghost {
                 background: transparent;
                 border: none;
-                color: white;
+                color: var(--text-main);
                 text-align: right;
                 font-size: 14px;
                 font-family: inherit;
@@ -110,23 +91,15 @@
                 padding: 0;
             }
 
-            .light-mode .settings-input-ghost {
-                color: #1e293b;
-            }
-
             .settings-select-ghost {
                 background: transparent;
                 border: none;
-                color: white;
+                color: var(--text-main);
                 font-size: 14px;
                 outline: none;
                 appearance: none;
                 text-align: right;
                 padding-right: 5px;
-            }
-
-            .light-mode .settings-select-ghost {
-                color: #1e293b;
             }
 
             /* Grid for colors in list */
@@ -183,7 +156,7 @@
                 font-weight: 700;
                 font-size: 15px;
                 color: white;
-                background: linear-gradient(135deg, var(--accent-blue), var(--accent-dark));
+                background: var(--accent-blue);
                 box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.2);
                 transition: 0.2s;
             }
@@ -214,8 +187,9 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-color: rgba(255, 255, 255, 0.1);
+                background-color: var(--input-bg);
                 transition: .4s;
+                border: 1px solid var(--card-border);
             }
 
             .slider:before {
@@ -247,6 +221,16 @@
 
             .slider.round:before {
                 border-radius: 50%;
+            }
+
+            .logout-btn {
+                background: none;
+                border: none;
+                color: var(--text-main);
+                font-size: 13px;
+                text-decoration: underline;
+                cursor: pointer;
+                opacity: 0.6;
             }
         </style>
 
@@ -420,25 +404,16 @@
         <div style="margin-top: 25px; text-align: center; opacity: 0.5;">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit"
-                    style="background: none; border: none; color: white; font-size: 13px; text-decoration: underline; cursor: pointer;"
-                    class="logout-btn">Déconnexion</button>
+                <button type="submit" class="logout-btn">Déconnexion</button>
             </form>
             <p style="font-size: 10px; margin-top: 15px;">Version 1.2.0 - Manage Premium</p>
         </div>
 
-        <style>
-            .light-mode .logout-btn {
-                color: #1e293b !important;
+        <script>
+            function selectColor(el, key) {
+                document.querySelectorAll('.color-bubble').forEach(b => b.classList.remove('active'));
+                el.classList.add('active');
+                el.querySelector('input').checked = true;
             }
-        </style>
-    </div>
-
-    <script>
-        function selectColor(el, key) {
-            document.querySelectorAll('.color-bubble').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            el.querySelector('input').checked = true;
-        }
-    </script>
+        </script>
 @endsection

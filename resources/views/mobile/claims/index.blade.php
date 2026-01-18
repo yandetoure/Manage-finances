@@ -2,23 +2,24 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-                                    menuOpen: false, 
-                                    activeClaim: null, 
-                                    repaymentOpen: false,
-                                    historyOpen: false,
-                                    openMenu(claim) {
-                                        this.activeClaim = claim;
-                                        this.menuOpen = true;
-                                        this.historyOpen = false;
-                                    },
-                                    closeMenu() {
-                                        this.menuOpen = false;
-                                        this.repaymentOpen = false;
-                                    }
-                                }">
+                                        menuOpen: false, 
+                                        activeClaim: null, 
+                                        repaymentOpen: false,
+                                        historyOpen: false,
+                                        openMenu(claim) {
+                                            this.activeClaim = claim;
+                                            this.menuOpen = true;
+                                            this.historyOpen = false;
+                                        },
+                                        closeMenu() {
+                                            this.menuOpen = false;
+                                            this.repaymentOpen = false;
+                                        }
+                                    }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Mes Créances</h2>
-            <a href="{{ route('claims.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
+            <a href="{{ route('claims.create') }}" class="btn btn-accent"
+                style="padding: 10px 18px; border-radius: 14px; font-size: 13px;">+
                 Nouvelle</a>
         </div>
 

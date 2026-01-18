@@ -47,7 +47,9 @@
                         style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                 </div>
 
-                <button type="submit" class="btn btn-accent" style="width: 100%;">Valider la prévision</button>
+                <button type="submit" class="btn btn-accent"
+                    style="width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 700;">Valider la
+                    prévision</button>
             </form>
         </div>
     </div>

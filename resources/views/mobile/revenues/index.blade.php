@@ -2,20 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{
-                menuOpen: false,
-                activeRevenue: null,
-                openMenu(revenue) {
-                    this.activeRevenue = revenue;
-                    this.menuOpen = true;
-                },
-                closeMenu() {
-                    this.menuOpen = false;
-                }
-            }">
+                    menuOpen: false,
+                    activeRevenue: null,
+                    openMenu(revenue) {
+                        this.activeRevenue = revenue;
+                        this.menuOpen = true;
+                    },
+                    closeMenu() {
+                        this.menuOpen = false;
+                    }
+                }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 class="text-bold">Mes Revenus</h2>
-            <a href="{{ route('revenues.create') }}" class="btn btn-primary"
-                style="padding: 8px 16px; border-radius: 50px;">+ Nouveau</a>
+            <a href="{{ route('revenues.create') }}" class="btn btn-accent"
+                style="padding: 10px 18px; border-radius: 14px; font-size: 13px;">+ Nouveau</a>
         </div>
 
         @forelse($revenues as $revenue)

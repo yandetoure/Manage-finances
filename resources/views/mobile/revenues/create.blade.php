@@ -3,34 +3,47 @@
 @section('content')
     <div class="fade-in">
         <style>
-            .category-radio:checked + .category-item {
+            .category-radio:checked+.category-item {
                 background: rgba(16, 185, 129, 0.15) !important;
                 border-color: #10b981 !important;
                 transform: translateY(-5px);
                 box-shadow: 0 10px 20px rgba(16, 185, 129, 0.1);
             }
-            .category-radio:checked + .category-item span:first-child {
+
+            .category-radio:checked+.category-item span:first-child {
                 transform: scale(1.1);
             }
+
             .input-modern:focus {
-                background: rgba(255,255,255,0.08) !important;
+                background: rgba(255, 255, 255, 0.08) !important;
                 border-color: #10b981 !important;
                 box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
             }
+
             .switch {
                 position: relative;
                 display: inline-block;
                 width: 46px;
                 height: 24px;
             }
-            .switch input { opacity: 0; width: 0; height: 0; }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
             .slider {
                 position: absolute;
                 cursor: pointer;
-                top: 0; left: 0; right: 0; bottom: 0;
-                background-color: rgba(255,255,255,0.1);
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.1);
                 transition: .4s;
             }
+
             .slider:before {
                 position: absolute;
                 content: "";
@@ -41,11 +54,26 @@
                 background-color: white;
                 transition: .4s;
             }
-            input:checked + .slider { background-color: #10b981; }
-            input:checked + .slider:before { transform: translateX(22px); }
-            .slider.round { border-radius: 34px; }
-            .slider.round:before { border-radius: 50%; }
-            ::-webkit-scrollbar { display: none; }
+
+            input:checked+.slider {
+                background-color: #10b981;
+            }
+
+            input:checked+.slider:before {
+                transform: translateX(22px);
+            }
+
+            .slider.round {
+                border-radius: 34px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+
+            ::-webkit-scrollbar {
+                display: none;
+            }
         </style>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
             <a href="{{ route('revenues.index') }}" style="text-decoration: none; font-size: 24px;">←</a>
@@ -167,7 +195,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary"
-                    style="width: 100%; padding: 16px; border-radius: 18px; font-weight: 700; font-size: 16px; background: linear-gradient(135deg, #10b981, #059669); border: none; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);">
+                    style="width: 100%; padding: 16px; border-radius: 18px; font-weight: 700; font-size: 16px; border: none;">
                     Enregistrer le revenu
                 </button>
             </form>

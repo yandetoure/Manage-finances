@@ -2,19 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{
-                menuOpen: false,
-                activeExpense: null,
-                openMenu(expense) {
-                    this.activeExpense = expense;
-                    this.menuOpen = true;
-                },
-                closeMenu() {
-                    this.menuOpen = false;
-                }
-            }">
+                        menuOpen: false,
+                        activeExpense: null,
+                        openMenu(expense) {
+                            this.activeExpense = expense;
+                            this.menuOpen = true;
+                        },
+                        closeMenu() {
+                            this.menuOpen = false;
+                        }
+                    }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Dépenses</h2>
-            <a href="{{ route('expenses.create') }}" class="btn btn-primary" style="background: #ef4444;">+ Ajouter</a>
+            <a href="{{ route('expenses.create') }}" class="btn btn-accent"
+                style="padding: 10px 18px; border-radius: 14px; font-size: 13px;">+ Ajouter</a>
         </div>
 
         @if($expenses->isEmpty())
@@ -34,7 +35,8 @@
                             </div>
                             <div>
                                 <p class="text-bold" style="font-size: 14px;">
-                                    {{ $expense->categoryRel->name ?? $expense->category }}</p>
+                                    {{ $expense->categoryRel->name ?? $expense->category }}
+                                </p>
                                 <p class="text-muted" style="font-size: 12px;">
                                     {{ \Carbon\Carbon::parse($expense->date)->translatedFormat('d M Y') }}
                                 </p>

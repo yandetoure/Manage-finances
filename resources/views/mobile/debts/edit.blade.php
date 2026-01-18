@@ -34,7 +34,9 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-accent" style="width: 100%;">Mettre à jour</button>
+                <button type="submit" class="btn btn-accent"
+                    style="width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 700;">Mettre à
+                    jour</button>
             </form>
         </div>
 

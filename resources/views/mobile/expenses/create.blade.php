@@ -4,10 +4,10 @@
     <div class="fade-in">
         <style>
             .category-radio:checked+.category-item {
-                background: rgba(239, 68, 68, 0.15) !important;
-                border-color: #ef4444 !important;
+                background: rgba(var(--accent-rgb), 0.15) !important;
+                border-color: var(--accent-blue) !important;
                 transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(239, 68, 68, 0.1);
+                box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.1);
             }
 
             .category-radio:checked+.category-item span:first-child {
@@ -16,8 +16,8 @@
 
             .input-modern:focus {
                 background: rgba(255, 255, 255, 0.08) !important;
-                border-color: #ef4444 !important;
-                box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+                border-color: var(--accent-blue) !important;
+                box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.1);
             }
 
             .switch {
@@ -56,7 +56,7 @@
             }
 
             input:checked+.slider {
-                background-color: #ef4444;
+                background-color: var(--accent-blue);
             }
 
             input:checked+.slider:before {
@@ -84,13 +84,18 @@
             <form action="{{ route('expenses.store') }}" method="POST">
                 @csrf
                 <div style="margin-bottom: 25px;">
-                    <label class="text-muted" style="font-size: 11px; display: block; margin-bottom: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Catégorie</label>
-                    <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; -ms-overflow-style: none;">
+                    <label class="text-muted"
+                        style="font-size: 11px; display: block; margin-bottom: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Catégorie</label>
+                    <div
+                        style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; -ms-overflow-style: none;">
                         @foreach($categories as $category)
                             <label style="flex-shrink: 0; cursor: pointer;">
-                                <input type="radio" name="category_id" value="{{ $category->id }}" required style="display: none;" class="category-radio">
-                                <div class="category-item" style="text-align: center; width: 80px; height: 90px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
-                                    <span style="font-size: 28px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">{{ $category->icon }}</span>
+                                <input type="radio" name="category_id" value="{{ $category->id }}" required
+                                    style="display: none;" class="category-radio">
+                                <div class="category-item"
+                                    style="text-align: center; width: 80px; height: 90px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                                    <span
+                                        style="font-size: 28px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">{{ $category->icon }}</span>
                                     <span style="font-size: 10px; font-weight: 700; opacity: 0.8;">{{ $category->name }}</span>
                                 </div>
                             </label>
@@ -104,47 +109,70 @@
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <label class="text-muted" style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Montant ({{ auth()->user()->currency }})</label>
+                    <label class="text-muted"
+                        style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Montant
+                        ({{ auth()->user()->currency }})</label>
                     <div style="position: relative;">
                         <input type="number" step="0.01" name="amount" required placeholder="0.00" class="input-modern"
                             style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 14px 14px 14px 45px; color: white; outline: none; transition: all 0.3s; font-weight: 700; font-size: 18px;">
-                        <div style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); opacity: 0.5; font-size: 18px;">
+                        <div
+                            style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); opacity: 0.5; font-size: 18px;">
                             💸
                         </div>
                     </div>
                 </div>
 
                 <div style="margin-bottom: 20px;">
-                    <label class="text-muted" style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Date de la dépense</label>
+                    <label class="text-muted"
+                        style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Date
+                        de la dépense</label>
                     <div style="position: relative;">
                         <input type="date" name="date" required value="{{ date('Y-m-d') }}" class="input-modern"
                             style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 14px 14px 14px 45px; color: white; outline: none; transition: all 0.3s;">
                         <div style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); opacity: 0.5;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
                         </div>
                     </div>
                 </div>
 
-                <div style="margin-bottom: 25px; background: rgba(255,255,255,0.02); border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.05);">
+                <div
+                    style="margin-bottom: 25px; background: rgba(255,255,255,0.02); border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.05);">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 35px; height: 35px; background: rgba(239, 68, 68, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #ef4444;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+                            <div
+                                style="width: 35px; height: 35px; background: rgba(239, 68, 68, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #ef4444;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 2v6h-6" />
+                                    <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                                    <path d="M3 22v-6h6" />
+                                    <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+                                </svg>
                             </div>
                             <div>
                                 <p style="font-size: 14px; font-weight: 600; margin: 0;">Dépense récurrente</p>
-                                <p class="text-muted" style="font-size: 11px; margin: 0;">S'ajoute automatiquement chaque période</p>
+                                <p class="text-muted" style="font-size: 11px; margin: 0;">S'ajoute automatiquement chaque
+                                    période</p>
                             </div>
                         </div>
                         <label class="switch">
-                            <input type="checkbox" name="is_recurrent" value="1" id="recurrent" 
+                            <input type="checkbox" name="is_recurrent" value="1" id="recurrent"
                                 onchange="document.getElementById('frequency-container').style.display = this.checked ? 'block' : 'none'">
                             <span class="slider round"></span>
                         </label>
                     </div>
 
-                    <div id="frequency-container" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
-                        <label class="text-muted" style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Fréquence</label>
+                    <div id="frequency-container"
+                        style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+                        <label class="text-muted"
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Fréquence</label>
                         <select name="frequency" class="input-modern"
                             style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                             <option value="weekly">Hebdomadaire</option>
@@ -154,7 +182,8 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; border-radius: 18px; font-weight: 700; font-size: 16px; background: linear-gradient(135deg, #ef4444, #dc2626); border: none; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);">
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; padding: 16px; border-radius: 18px; font-weight: 700; font-size: 16px; border: none;">
                     Enregistrer la dépense
                 </button>
             </form>

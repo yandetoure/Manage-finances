@@ -2,23 +2,24 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-                    menuOpen: false, 
-                    activeSaving: null, 
-                    contributionOpen: false,
-                    historyOpen: false,
-                    openMenu(saving) {
-                        this.activeSaving = saving;
-                        this.menuOpen = true;
-                        this.historyOpen = false;
-                    },
-                    closeMenu() {
-                        this.menuOpen = false;
-                        this.contributionOpen = false;
-                    }
-                }">
+                            menuOpen: false, 
+                            activeSaving: null, 
+                            contributionOpen: false,
+                            historyOpen: false,
+                            openMenu(saving) {
+                                this.activeSaving = saving;
+                                this.menuOpen = true;
+                                this.historyOpen = false;
+                            },
+                            closeMenu() {
+                                this.menuOpen = false;
+                                this.contributionOpen = false;
+                            }
+                        }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Mon Épargne</h2>
-            <a href="{{ route('savings.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
+            <a href="{{ route('savings.create') }}" class="btn btn-accent"
+                style="padding: 10px 18px; border-radius: 14px; font-size: 13px;">+
                 Nouveau</a>
         </div>
 
@@ -44,20 +45,20 @@
                             </div>
                         </div>
                         <span
-                            style="font-size: 11px; font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 6px;">{{ number_format($percentage, 0) }}%</span>
+                            style="font-size: 11px; font-weight: 700; color: var(--accent-blue); background: rgba(var(--accent-rgb), 0.1); padding: 2px 8px; border-radius: 6px;">{{ number_format($percentage, 0) }}%</span>
                     </div>
 
                     <div
                         style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);">
                         <div
-                            style="width: {{ $percentage }}%; height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 10px; transition: width 0.5s ease-out;">
+                            style="width: {{ $percentage }}%; height: 100%; background: var(--accent-blue); border-radius: 10px; transition: width 0.5s ease-out; box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.3);">
                         </div>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; align-items: baseline;">
                         <div>
                             <span
-                                style="font-size: 15px; color: #10b981; font-weight: 700;">{{ number_format($saving->contributions->sum('amount'), 0, ',', ' ') }}
+                                style="font-size: 15px; color: var(--accent-blue); font-weight: 700;">{{ number_format($saving->contributions->sum('amount'), 0, ',', ' ') }}
                                 {{ auth()->user()->currency }}</span>
                             <p class="text-muted" style="font-size: 9px; margin-top: -2px;">Total épargné</p>
                         </div>

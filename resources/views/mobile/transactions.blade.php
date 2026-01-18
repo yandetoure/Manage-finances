@@ -2,23 +2,23 @@
 
 @section('content')
     <div class="fade-in" x-data="{
-        menuOpen: false,
-        activeTransaction: null,
-        openMenu(transaction) {
-            this.activeTransaction = transaction;
-            this.menuOpen = true;
-        },
-        closeMenu() {
-            this.menuOpen = false;
-        }
-    }">
+                menuOpen: false,
+                activeTransaction: null,
+                openMenu(transaction) {
+                    this.activeTransaction = transaction;
+                    this.menuOpen = true;
+                },
+                closeMenu() {
+                    this.menuOpen = false;
+                }
+            }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Transactions</h2>
             <div style="display: flex; gap: 10px;">
                 <a href="{{ route('revenues.create') }}" class="btn btn-accent"
                     style="padding: 8px 12px; font-size: 12px;">+ Revenu</a>
                 <a href="{{ route('expenses.create') }}" class="btn btn-primary"
-                    style="padding: 8px 12px; font-size: 12px; background: #ef4444;">+ Dépense</a>
+                    style="padding: 8px 12px; font-size: 12px;">+ Dépense</a>
             </div>
         </div>
 
@@ -49,12 +49,13 @@
                         onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <div
-                                style="width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ $item->category->color ?? ($item->type == 'revenue' ? '#3b82f6' : '#ef4444') }}20; color: {{ $item->category->color ?? ($item->type == 'revenue' ? '#3b82f6' : '#ef4444') }}; font-size: 20px;">
+                                style="width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ $item->category->color ?? ($item->type == 'revenue' ? 'var(--accent-blue)' : '#ef4444') }}20; color: {{ $item->category->color ?? ($item->type == 'revenue' ? 'var(--accent-blue)' : '#ef4444') }}; font-size: 20px;">
                                 {{ $item->category->icon ?? ($item->type == 'revenue' ? '📈' : '📉') }}
                             </div>
                             <div>
                                 <p class="text-bold" style="font-size: 14px;">
-                                    {{ $item->type == 'revenue' ? $item->source : ($item->category->name ?? $item->category) }}</p>
+                                    {{ $item->type == 'revenue' ? $item->source : ($item->category->name ?? $item->category) }}
+                                </p>
                                 <p class="text-muted" style="font-size: 11px;">
                                     {{ $item->category->name ?? ($item->type == 'revenue' ? 'Revenu' : 'Dépense') }} •
                                     {{ \Carbon\Carbon::parse($item->tx_date)->translatedFormat('d M Y') }}
@@ -75,11 +76,11 @@
             x-transition:leave="fade-out" style="display: none;"></div>
 
         <div x-show="menuOpen" class="bottom-sheet" x-transition:enter="slide-up" x-transition:leave="slide-down"
-            style="display: none; background: rgba(23, 23, 23, 0.98); backdrop-filter: blur(25px); border-top-left-radius: 35px; border-top-right-radius: 35px; padding: 25px 20px 80px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.12);">
+            style="display: none; background: var(--bg-color); border: 1px solid var(--card-border); backdrop-filter: blur(25px); border-top-left-radius: 35px; border-top-right-radius: 35px; padding: 25px 20px 80px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000;">
             <template x-if="activeTransaction">
                 <div>
                     <div
-                        style="width: 40px; height: 5px; background: rgba(255,255,255,0.25); border-radius: 3px; margin: 0 auto 20px;">
+                        style="width: 40px; height: 5px; background: var(--text-muted); opacity: 0.3; border-radius: 3px; margin: 0 auto 20px;">
                     </div>
 
                     <div style="text-align: center; margin-bottom: 25px;">
@@ -113,7 +114,7 @@
                     <!-- Actions Grid -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
                         <a :href="(activeTransaction.type == 'revenue' ? '/revenues/' : '/expenses/') + activeTransaction.id + '/edit'"
-                            class="action-card" style="text-decoration: none; color: white;">
+                            class="action-card" style="text-decoration: none; color: var(--text-main);">
                             <span style="font-size: 20px; margin-bottom: 5px; display: block;">✏️</span>
                             <span style="font-weight: 600;">Modifier</span>
                         </a>
@@ -137,8 +138,8 @@
 
         <style>
             .action-card {
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
+                background: var(--card-bg);
+                border: 1px solid var(--card-border);
                 border-radius: 20px;
                 padding: 15px;
                 display: flex;

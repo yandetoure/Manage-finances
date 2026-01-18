@@ -3,12 +3,15 @@
 @section('content')
     <div class="fade-in">
         <style>
-            .category-radio:checked + .category-item {
+            .category-radio:checked+.category-item {
                 background: rgba(59, 130, 246, 0.1) !important;
                 border-color: #3b82f6 !important;
                 box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
             }
-            ::-webkit-scrollbar { display: none; }
+
+            ::-webkit-scrollbar {
+                display: none;
+            }
         </style>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
             <a href="{{ route('savings.index') }}" style="text-decoration: none; font-size: 24px;">←</a>
@@ -66,7 +69,8 @@
                         style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                 </div>
 
-                <button type="submit" class="btn btn-accent" style="width: 100%; background: var(--primary-green);">Lancer
+                <button type="submit" class="btn btn-accent"
+                    style="width: 100%; border: none; padding: 16px; border-radius: 18px;">Lancer
                     le projet</button>
             </form>
         </div>
