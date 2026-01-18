@@ -141,5 +141,14 @@
     "Catégorie": "Catégorie",
     "Statut": "Statut",
     "Actions": "Actions",
-    "Aucune donnée disponible": "Aucune donnée disponible"
+    "Aucune donnée disponible": "Aucune donnée disponible",
+    "Outils": "Outils",
+    "Convertisseur de devises": "Convertisseur de devises",
+    "Conversion en temps réel": "Conversion en temps réel",
+    "De": "De",
+    "Vers": "Vers",
+    "Taux:": "Taux:",
+    "Chargement...": "Chargement...",
+    "Taux de change mis à jour quotidiennement": "Taux de change mis à jour quotidiennement",
+    "Analytics": "Analytics"
 }

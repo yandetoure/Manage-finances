@@ -405,6 +405,101 @@
                 </div>
             </div>
 
+            <!-- SECTION: OUTILS -->
+            <p class="settings-section-title">{{ __('Outils') }}</p>
+            <div class="glass-card" style="padding: 25px;" x-data="currencyConverter()">
+                <div style="margin-bottom: 20px;">
+                    <h3 class="text-bold" style="font-size: 16px; margin-bottom: 5px;">{{ __('Convertisseur de devises') }}
+                    </h3>
+                    <p class="text-muted" style="font-size: 12px;">{{ __('Conversion en temps réel') }}</p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <!-- From Currency -->
+                    <div>
+                        <label class="text-muted"
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">{{ __('De') }}</label>
+                        <div style="display: flex; gap: 10px;">
+                            <select x-model="from" @change="convert()" class="settings-select-ghost"
+                                style="flex: 1; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;">
+                                <option value="USD">USD - Dollar américain</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - Livre sterling</option>
+                                <option value="JPY">JPY - Yen japonais</option>
+                                <option value="CHF">CHF - Franc suisse</option>
+                                <option value="CAD">CAD - Dollar canadien</option>
+                                <option value="AUD">AUD - Dollar australien</option>
+                                <option value="CNY">CNY - Yuan chinois</option>
+                                <option value="XOF">XOF - Franc CFA</option>
+                                <option value="XAF">XAF - Franc CFA (CEMAC)</option>
+                                <option value="MAD">MAD - Dirham marocain</option>
+                                <option value="TND">TND - Dinar tunisien</option>
+                            </select>
+                            <input type="number" x-model="amount" @input="convert()" class="settings-input-ghost"
+                                style="width: 120px; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; text-align: right;"
+                                placeholder="1.00" step="0.01">
+                        </div>
+                    </div>
+
+                    <!-- Swap Button -->
+                    <div style="text-align: center;">
+                        <button type="button" @click="swap()"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 8px 16px; cursor: pointer; transition: all 0.2s;"
+                            onmouseover="this.style.background='rgba(255,255,255,0.1)'"
+                            onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                            <span style="font-size: 20px;">⇅</span>
+                        </button>
+                    </div>
+
+                    <!-- To Currency -->
+                    <div>
+                        <label class="text-muted"
+                            style="font-size: 11px; display: block; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">{{ __('Vers') }}</label>
+                        <select x-model="to" @change="convert()" class="settings-select-ghost"
+                            style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;">
+                            <option value="USD">USD - Dollar américain</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - Livre sterling</option>
+                            <option value="JPY">JPY - Yen japonais</option>
+                            <option value="CHF">CHF - Franc suisse</option>
+                            <option value="CAD">CAD - Dollar canadien</option>
+                            <option value="AUD">AUD - Dollar australien</option>
+                            <option value="CNY">CNY - Yuan chinois</option>
+                            <option value="XOF">XOF - Franc CFA</option>
+                            <option value="XAF">XAF - Franc CFA (CEMAC)</option>
+                            <option value="MAD">MAD - Dirham marocain</option>
+                            <option value="TND">TND - Dinar tunisien</option>
+                        </select>
+                    </div>
+
+                    <!-- Result Display -->
+                    <div
+                        style="background: var(--accent-gradient); border-radius: 16px; padding: 20px; text-align: center;">
+                        <template x-if="loading">
+                            <p style="color: white; font-size: 14px;">{{ __('Chargement...') }}</p>
+                        </template>
+                        <template x-if="!loading && result !== null">
+                            <div>
+                                <p style="color: rgba(255,255,255,0.8); font-size: 12px; margin-bottom: 5px;"
+                                    x-text="amount + ' ' + from + ' ='"></p>
+                                <p style="color: white; font-size: 28px; font-weight: 700;"
+                                    x-text="result.toFixed(2) + ' ' + to"></p>
+                                <p style="color: rgba(255,255,255,0.7); font-size: 11px; margin-top: 8px;">{{ __('Taux:') }}
+                                    <span x-text="'1 ' + from + ' = ' + rate.toFixed(4) + ' ' + to"></span>
+                                </p>
+                            </div>
+                        </template>
+                        <template x-if="error">
+                            <p style="color: rgba(255,255,255,0.9); font-size: 13px;" x-text="error"></p>
+                        </template>
+                    </div>
+
+                    <p class="text-muted" style="font-size: 10px; text-align: center; opacity: 0.6;">
+                        {{ __('Taux de change mis à jour quotidiennement') }}
+                    </p>
+                </div>
+            </div>
+
             <!-- SECTION: SYSTÈME -->
             <p class="settings-section-title">{{ __('Système') }}</p>
             <div class="settings-group">
@@ -445,7 +540,7 @@
         </div>
 
         <script>
-            // Store initial theme values to avoid unnecessary reloads
+            // Store initial theme values to         avoid unnecessary reloads
             let currentTheme = '{{ $settings->theme ?? 'dark' }}';
             let currentAccent = '{{ $settings->accent_color ?? 'blue' }}';
 
@@ -501,5 +596,72 @@
                     status.style.color = '#ef4444';
                 }
             }
-        </script>
+        // Currency Converter Alpine.js Component
+                function currencyConverter() {
+                    return {
+                        from: '{{ auth()->user()->settings->currency ?? "USD" }}',
+                        to: 'EUR',
+                        amount: 1,
+                        result: null,
+                        rate: 0,
+                        loading: false,
+                        error: null,
+
+                        init() {
+                            this.convert();
+                        },
+
+                        swap() {
+                            [this.from, this.to] = [this.to, this.from];
+                            this.convert();
+                        },
+
+                        async convert() {
+                            if (!this.amount || this.amount <= 0) {
+                                this.result = 0;
+                                return;
+                            }
+
+                            this.loading = true;
+                            this.error = null;
+
+                            try {
+                                // Check cache first
+                                const cacheKey = `rate_${this.from}_${this.to}`;
+                                const cached = localStorage.getItem(cacheKey);
+                                const cacheTime = localStorage.getItem(`${cacheKey}_time`);
+                                const now = Date.now();
+
+                                // Use cache if less than 1 hour old
+                                if (cached && cacheTime && (now - parseInt(cacheTime)) < 3600000) {
+                                    this.rate = parseFloat(cached);
+                                    this.result = this.amount * this.rate;
+                                    this.loading = false;
+                                    return;
+                                }
+
+                                // Fetch from API
+                                const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${this.from}`);
+                                const data = await response.json();
+
+                                if (data.rates && data.rates[this.to]) {
+                                    this.rate = data.rates[this.to];
+                                    this.result = this.amount * this.rate;
+
+                                    // Cache the rate
+                                    localStorage.setItem(cacheKey, this.rate.toString());
+                                    localStorage.setItem(`${cacheKey}_time`, now.toString());
+                                } else {
+                                    this.error = 'Taux de change non disponible';
+                                }
+                            } catch (err) {
+                                this.error = 'Erreur de connexion';
+                                console.error('Currency conversion error:', err);
+                            } finally {
+                                this.loading = false;
+                            }
+                        }
+                    }
+                }
+            </script>
 @endsection

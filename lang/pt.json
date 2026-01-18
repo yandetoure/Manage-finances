@@ -141,5 +141,14 @@
     "Catégorie": "Categoria",
     "Statut": "Status",
     "Actions": "Ações",
-    "Aucune donnée disponible": "Nenhum dado disponível"
+    "Aucune donnée disponible": "Nenhum dado disponível",
+    "Outils": "Ferramentas",
+    "Convertisseur de devises": "Conversor de moedas",
+    "Conversion en temps réel": "Conversão em tempo real",
+    "De": "De",
+    "Vers": "Para",
+    "Taux:": "Taxa:",
+    "Chargement...": "Carregando...",
+    "Taux de change mis à jour quotidiennement": "Taxas de câmbio atualizadas diariamente",
+    "Analytics": "Analíticas"
 }

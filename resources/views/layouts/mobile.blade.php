@@ -231,39 +231,96 @@
         @if(auth()->user()->hasRole('admin') && request()->is('admin*'))
             <a href="{{ route('admin.dashboard') }}"
                 class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <div class="nav-icon">📊</div>
-                <span>Stats</span>
+                <div class="nav-icon-wrapper">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                </div>
+                <span class="nav-label">Stats</span>
             </a>
             <a href="{{ route('admin.users.index') }}"
                 class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                <div class="nav-icon">👥</div>
-                <span>Users</span>
+                <div class="nav-icon-wrapper">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                </div>
+                <span class="nav-label">Users</span>
             </a>
             <a href="{{ route('admin.modules.index') }}"
                 class="nav-item {{ request()->routeIs('admin.modules.*') ? 'active' : '' }}">
-                <div class="nav-icon">🛠️</div>
-                <span>Modules</span>
+                <div class="nav-icon-wrapper">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <span class="nav-label">Modules</span>
             </a>
             <a href="{{ route('settings') }}" class="nav-item {{ request()->routeIs('settings') ? 'active' : '' }}">
-                <div class="nav-icon">⚙️</div>
-                <span>Admin</span>
+                <div class="nav-icon-wrapper">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6m5.66-13.66l-4.24 4.24m0 6l-4.24 4.24M23 12h-6m-6 0H1m18.36-5.64l-4.24 4.24m0 6l-4.24 4.24"></path>
+                        </svg>
+                    </div>
+                </div>
+                <span class="nav-label">Admin</span>
             </a>
         @else
             <a href="{{ route('home') }}" class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
-                <div class="nav-icon">🏠</div>
-                <span>{{ __('Accueil') }}</span>
+                <div class="nav-icon-wrapper">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <span class="nav-label">{{ __('Accueil') }}</span>
             </a>
             <a href="{{ route('transactions') }}" class="nav-item {{ request()->routeIs('transactions') ? 'active' : '' }}">
-                <div class="nav-icon">📊</div>
-                <span>{{ __('Transac') }}</span>
+                <div class="nav-icon-wrapper">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                </div>
+                <span class="nav-label">{{ __('Transac') }}</span>
             </a>
-            <a href="{{ route('savings.index') }}" class="nav-item {{ request()->routeIs('savings.*') ? 'active' : '' }}">
-                <div class="nav-icon">💰</div>
-                <span>{{ __('Épargne') }}</span>
+            <a href="{{ route('analytics') }}" class="nav-item {{ request()->routeIs('analytics') ? 'active' : '' }}">
+                <div class="nav-icon-wrapper">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <span class="nav-label">{{ __('Analytics') }}</span>
             </a>
             <a href="{{ route('settings') }}" class="nav-item {{ request()->routeIs('settings') ? 'active' : '' }}">
-                <div class="nav-icon">⚙️</div>
-                <span>{{ __('Param.') }}</span>
+                <div class="nav-icon-wrapper">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6m5.66-13.66l-4.24 4.24m0 6l-4.24 4.24M23 12h-6m-6 0H1m18.36-5.64l-4.24 4.24m0 6l-4.24 4.24"></path>
+                        </svg>
+                    </div>
+                </div>
+                <span class="nav-label">{{ __('Param.') }}</span>
             </a>
         @endif
     </nav>

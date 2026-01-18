@@ -141,5 +141,14 @@
     "Catégorie": "Category",
     "Statut": "Status",
     "Actions": "Actions",
-    "Aucune donnée disponible": "No data available"
+    "Aucune donnée disponible": "No data available",
+    "Outils": "Tools",
+    "Convertisseur de devises": "Currency Converter",
+    "Conversion en temps réel": "Real-time conversion",
+    "De": "From",
+    "Vers": "To",
+    "Taux:": "Rate:",
+    "Chargement...": "Loading...",
+    "Taux de change mis à jour quotidiennement": "Exchange rates updated daily",
+    "Analytics": "Analytics"
 }
