@@ -31,6 +31,14 @@ class ExpenseController extends Controller
             'date' => 'required|date',
         ]);
 
+        if (isset($validated['date'])) {
+            $validated['date'] = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
+        }
+
+        if (empty($validated['frequency'])) {
+            unset($validated['frequency']);
+        }
+
         $validated['user_id'] = Auth::id();
         Expense::create($validated);
 
@@ -55,6 +63,14 @@ class ExpenseController extends Controller
             'frequency' => 'nullable|string',
             'date' => 'required|date',
         ]);
+
+        if (isset($validated['date'])) {
+            $validated['date'] = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
+        }
+
+        if (array_key_exists('frequency', $validated) && empty($validated['frequency'])) {
+            unset($validated['frequency']);
+        }
 
         $expense->update($validated);
 

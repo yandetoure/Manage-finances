@@ -31,6 +31,14 @@ class RevenueController extends Controller
             'due_date' => 'nullable|date',
         ]);
 
+        if (isset($validated['due_date'])) {
+            $validated['due_date'] = \Carbon\Carbon::parse($validated['due_date'])->format('Y-m-d');
+        }
+
+        if (empty($validated['frequency'])) {
+            unset($validated['frequency']);
+        }
+
         $validated['user_id'] = Auth::id();
         Revenue::create($validated);
 
@@ -55,6 +63,14 @@ class RevenueController extends Controller
             'frequency' => 'nullable|string',
             'due_date' => 'nullable|date',
         ]);
+
+        if (isset($validated['due_date'])) {
+            $validated['due_date'] = \Carbon\Carbon::parse($validated['due_date'])->format('Y-m-d');
+        }
+
+        if (array_key_exists('frequency', $validated) && empty($validated['frequency'])) {
+            unset($validated['frequency']);
+        }
 
         $revenue->update($validated);
 

@@ -29,6 +29,10 @@ class DebtController extends Controller
             'due_date' => 'nullable|date',
         ]);
 
+        if (isset($validated['due_date'])) {
+            $validated['due_date'] = \Carbon\Carbon::parse($validated['due_date'])->format('Y-m-d');
+        }
+
         $validated['user_id'] = Auth::id();
         $validated['status'] = 'pending';
         Debt::create($validated);
@@ -53,6 +57,10 @@ class DebtController extends Controller
             'due_date' => 'nullable|date',
             'status' => 'required|in:pending,paid,late',
         ]);
+
+        if (isset($validated['due_date'])) {
+            $validated['due_date'] = \Carbon\Carbon::parse($validated['due_date'])->format('Y-m-d');
+        }
 
         $debt->update($validated);
 

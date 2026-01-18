@@ -24,6 +24,10 @@ class ExpenseController extends Controller
             'frequency' => 'nullable|string',
         ]);
 
+        if (isset($validated['date'])) {
+            $validated['date'] = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
+        }
+
         if (empty($validated['frequency'])) {
             unset($validated['frequency']);
         }
@@ -52,6 +56,14 @@ class ExpenseController extends Controller
             'is_recurrent' => 'nullable|boolean',
             'frequency' => 'nullable|string',
         ]);
+
+        if (isset($validated['date'])) {
+            $validated['date'] = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
+        }
+
+        if (array_key_exists('frequency', $validated) && empty($validated['frequency'])) {
+            unset($validated['frequency']);
+        }
 
         $expense->update($validated);
         return $expense;

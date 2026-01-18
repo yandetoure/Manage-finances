@@ -2,20 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-                                menuOpen: false, 
-                                activeClaim: null, 
-                                repaymentOpen: false,
-                                historyOpen: false,
-                                openMenu(claim) {
-                                    this.activeClaim = claim;
-                                    this.menuOpen = true;
-                                    this.historyOpen = false;
-                                },
-                                closeMenu() {
-                                    this.menuOpen = false;
-                                    this.repaymentOpen = false;
-                                }
-                            }">
+                                    menuOpen: false, 
+                                    activeClaim: null, 
+                                    repaymentOpen: false,
+                                    historyOpen: false,
+                                    openMenu(claim) {
+                                        this.activeClaim = claim;
+                                        this.menuOpen = true;
+                                        this.historyOpen = false;
+                                    },
+                                    closeMenu() {
+                                        this.menuOpen = false;
+                                        this.repaymentOpen = false;
+                                    }
+                                }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Mes Créances</h2>
             <a href="{{ route('claims.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
@@ -45,7 +45,7 @@
                     </div>
                     <div style="text-align: right;">
                         <p class="text-bold" style="color: #22c55e; font-size: 15px;">
-                            {{ number_format($claim->amount - $claim->payments->sum('amount'), 0, ',', ' ') }}
+                            {{ number_format($claim->remaining, 0, ',', ' ') }}
                             {{ auth()->user()->currency }}
                         </p>
                         <p class="text-muted" style="font-size: 9px; margin-top: -2px;">Reste à recouvrer</p>
@@ -79,10 +79,10 @@
                         <p style="color: #22c55e; font-weight: 700; font-size: 18px;"
                             x-text="new Intl.NumberFormat().format(activeClaim.amount) + ' {{ auth()->user()->currency }}'">
                         </p>
-                        <template x-if="activeClaim.payments && activeClaim.payments.length > 0">
+                        <template x-if="activeClaim.total_paid > 0">
                             <p class="text-muted" style="font-size: 13px; margin-top: 5px;">
                                 Reste à recouvrer: <span style="color: #ef4444; font-weight: 600;"
-                                    x-text="new Intl.NumberFormat().format(activeClaim.amount - activeClaim.payments.reduce((acc, p) => acc + parseFloat(p.amount), 0)) + ' {{ auth()->user()->currency }}'"></span>
+                                    x-text="new Intl.NumberFormat().format(activeClaim.remaining) + ' {{ auth()->user()->currency }}'"></span>
                             </p>
                         </template>
                     </div>

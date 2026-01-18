@@ -17,11 +17,22 @@ class DashboardController extends Controller
         $totalRevenues = Revenue::where('user_id', $user->id)->sum('amount');
         $totalExpenses = Expense::where('user_id', $user->id)->sum('amount');
         $totalSavings = Saving::where('user_id', $user->id)->sum('current_amount');
+        $totalDebts = \App\Models\Debt::where('user_id', $user->id)
+            ->where('status', '!=', 'paid')
+            ->get()
+            ->sum('remaining');
+
+        $totalClaims = \App\Models\Claim::where('user_id', $user->id)
+            ->where('status', '!=', 'collected')
+            ->get()
+            ->sum('remaining');
 
         return response()->json([
             'total_revenues' => $totalRevenues,
             'total_expenses' => $totalExpenses,
             'total_savings' => $totalSavings,
+            'total_debts' => $totalDebts,
+            'total_claims' => $totalClaims,
             'balance' => $totalRevenues - $totalExpenses,
             'recent_transactions' => $this->getRecentTransactions($user->id)
         ]);

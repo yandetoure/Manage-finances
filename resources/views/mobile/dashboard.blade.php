@@ -17,17 +17,17 @@
 
         <!-- Summary Grid -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div class="glass-card" style="margin-bottom: 0;">
-                <p class="text-muted" style="font-size: 12px;">Créances</p>
+            <a href="{{ route('claims.index') }}" class="glass-card" style="margin-bottom: 0; text-decoration: none;">
+                <p class="text-muted" style="font-size: 12px;">Créances (Reste)</p>
                 <p class="text-bold text-blue">{{ number_format($totalClaims, 0, ',', ' ') }}
                     {{ auth()->user()->currency }}
                 </p>
-            </div>
-            <div class="glass-card" style="margin-bottom: 0;">
-                <p class="text-muted" style="font-size: 12px;">Dettes</p>
-                <p class="text-bold text-green">{{ number_format($totalDebts, 0, ',', ' ') }} {{ auth()->user()->currency }}
+            </a>
+            <a href="{{ route('debts.index') }}" class="glass-card" style="margin-bottom: 0; text-decoration: none;">
+                <p class="text-muted" style="font-size: 12px;">Dettes (Reste)</p>
+                <p class="text-bold text-red">{{ number_format($totalDebts, 0, ',', ' ') }} {{ auth()->user()->currency }}
                 </p>
-            </div>
+            </a>
         </div>
 
         <!-- Monthly Graph Placeholder (Using Chart.js) -->

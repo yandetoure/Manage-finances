@@ -24,6 +24,10 @@ class RevenueController extends Controller
             'frequency' => 'nullable|string',
         ]);
 
+        if (isset($validated['due_date'])) {
+            $validated['due_date'] = \Carbon\Carbon::parse($validated['due_date'])->format('Y-m-d');
+        }
+
         if (empty($validated['frequency'])) {
             unset($validated['frequency']);
         }
@@ -52,6 +56,14 @@ class RevenueController extends Controller
             'is_recurrent' => 'nullable|boolean',
             'frequency' => 'nullable|string',
         ]);
+
+        if (isset($validated['due_date'])) {
+            $validated['due_date'] = \Carbon\Carbon::parse($validated['due_date'])->format('Y-m-d');
+        }
+
+        if (array_key_exists('frequency', $validated) && empty($validated['frequency'])) {
+            unset($validated['frequency']);
+        }
 
         $revenue->update($validated);
         return $revenue;

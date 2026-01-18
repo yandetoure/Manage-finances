@@ -2,20 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-                        menuOpen: false, 
-                        activeDebt: null, 
-                        repaymentOpen: false,
-                        historyOpen: false,
-                        openMenu(debt) {
-                            this.activeDebt = debt;
-                            this.menuOpen = true;
-                            this.historyOpen = false;
-                        },
-                        closeMenu() {
-                            this.menuOpen = false;
-                            this.repaymentOpen = false;
-                        }
-                    }">
+                            menuOpen: false, 
+                            activeDebt: null, 
+                            repaymentOpen: false,
+                            historyOpen: false,
+                            openMenu(debt) {
+                                this.activeDebt = debt;
+                                this.menuOpen = true;
+                                this.historyOpen = false;
+                            },
+                            closeMenu() {
+                                this.menuOpen = false;
+                                this.repaymentOpen = false;
+                            }
+                        }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Mes Dettes</h2>
             <a href="{{ route('debts.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
@@ -46,7 +46,7 @@
                     </div>
                     <div style="text-align: right;">
                         <p class="text-bold" style="color: #a855f7; font-size: 15px;">
-                            {{ number_format($debt->amount - $debt->payments->sum('amount'), 0, ',', ' ') }}
+                            {{ number_format($debt->remaining, 0, ',', ' ') }}
                             {{ auth()->user()->currency }}
                         </p>
                         <p class="text-muted" style="font-size: 9px; margin-top: -2px;">Reste à payer</p>
@@ -81,6 +81,12 @@
                         <p style="color: #a855f7; font-weight: 700; font-size: 18px;"
                             x-text="new Intl.NumberFormat().format(activeDebt.amount) + ' {{ auth()->user()->currency }}'">
                         </p>
+                        <template x-if="activeDebt.total_paid > 0">
+                            <p class="text-muted" style="font-size: 13px; margin-top: 5px;">
+                                Reste à payer: <span style="color: #ef4444; font-weight: 600;"
+                                    x-text="new Intl.NumberFormat().format(activeDebt.remaining) + ' {{ auth()->user()->currency }}'"></span>
+                            </p>
+                        </template>
                     </div>
 
                     <!-- Status Selector -->

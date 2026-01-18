@@ -18,11 +18,19 @@ class HomeController extends Controller
     {
         $user = Auth::user();
 
-        $totalRevenue = Revenue::where('user_id', $user->id)->sum('amount');
-        $totalExpenses = Expense::where('user_id', $user->id)->sum('amount');
-        $totalDebts = Debt::where('user_id', $user->id)->where('status', 'pending')->sum('amount');
-        $totalSavings = Saving::where('user_id', $user->id)->sum('current_amount');
-        $totalClaims = \App\Models\Claim::where('user_id', $user->id)->where('status', '!=', 'paid')->sum('amount');
+        $totalRevenue = Revenue::where('user_id', '=', $user->id)->sum('amount');
+        $totalExpenses = Expense::where('user_id', '=', $user->id)->sum('amount');
+        $totalDebts = Debt::where('user_id', '=', $user->id)
+            ->where('status', '!=', 'paid')
+            ->get()
+            ->sum('remaining');
+
+        $totalClaims = \App\Models\Claim::where('user_id', '=', $user->id)
+            ->where('status', '!=', 'collected')
+            ->get()
+            ->sum('remaining');
+
+        $totalSavings = Saving::where('user_id', '=', $user->id)->sum('current_amount');
 
         $balance = $totalRevenue - $totalExpenses;
 
@@ -78,36 +86,37 @@ class HomeController extends Controller
 
         $selectedDate = \Carbon\Carbon::create($year, $month, 1)->endOfMonth();
 
-        $totalRevenue = Revenue::where('user_id', $user->id)
+        $totalRevenue = Revenue::where('user_id', '=', $user->id)
             ->where(function ($query) use ($month, $year, $selectedDate) {
                 $query->where(function ($q) use ($month, $year) {
-                    $q->whereMonth('due_date', $month)->whereYear('due_date', $year);
+                    $q->whereMonth('due_date', '=', $month)->whereYear('due_date', '=', $year);
                 })->orWhere(function ($q) use ($selectedDate) {
-                    $q->where('is_recurrent', true)->where('due_date', '<=', $selectedDate);
+                    $q->where('is_recurrent', '=', true)->where('due_date', '<=', $selectedDate);
                 });
             })
             ->sum('amount');
 
-        $totalExpenses = Expense::where('user_id', $user->id)
+        $totalExpenses = Expense::where('user_id', '=', $user->id)
             ->where(function ($query) use ($month, $year, $selectedDate) {
                 $query->where(function ($q) use ($month, $year) {
-                    $q->whereMonth('date', $month)->whereYear('date', $year);
+                    $q->whereMonth('date', '=', $month)->whereYear('date', '=', $year);
                 })->orWhere(function ($q) use ($selectedDate) {
-                    $q->where('is_recurrent', true)->where('date', '<=', $selectedDate);
+                    $q->where('is_recurrent', '=', true)->where('date', '<=', $selectedDate);
                 });
             })
             ->sum('amount');
 
-        $totalDebts = Debt::where('user_id', $user->id)
-            ->whereMonth('created_at', $month)
-            ->whereYear('created_at', $year)
-            ->sum('amount');
+        $totalDebts = Debt::where('user_id', '=', $user->id)
+            ->whereMonth('created_at', '=', $month)
+            ->whereYear('created_at', '=', $year)
+            ->get()
+            ->sum('remaining');
 
         $totalSavings = \App\Models\SavingContribution::whereHas('parentSaving', function ($q) use ($user) {
-            $q->where('user_id', $user->id);
+            $q->where('user_id', '=', $user->id);
         })
-            ->whereMonth('created_at', $month)
-            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->whereYear('created_at', '=', $year)
             ->sum('amount');
 
         $balance = $totalRevenue - $totalExpenses;

@@ -18,6 +18,8 @@ class Debt extends Model
         'due_date',
     ];
 
+    protected $appends = ['total_paid', 'remaining'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -26,5 +28,15 @@ class Debt extends Model
     public function payments()
     {
         return $this->hasMany(DebtPayment::class);
+    }
+
+    public function getTotalPaidAttribute()
+    {
+        return $this->payments()->sum('amount');
+    }
+
+    public function getRemainingAttribute()
+    {
+        return max(0, $this->amount - $this->total_paid);
     }
 }

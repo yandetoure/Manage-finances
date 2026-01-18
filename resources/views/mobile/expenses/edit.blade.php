@@ -31,6 +31,24 @@
                         style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
                 </div>
 
+                <div style="margin-bottom: 25px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <input type="checkbox" name="is_recurrent" value="1" id="recurrent" {{ $expense->is_recurrent ? 'checked' : '' }}
+                            style="accent-color: #ef4444;" onchange="document.getElementById('frequency-container').style.display = this.checked ? 'block' : 'none'">
+                        <label for="recurrent" style="font-size: 14px;">Dépense récurrente</label>
+                    </div>
+
+                    <div id="frequency-container" style="{{ $expense->is_recurrent ? 'display: block;' : 'display: none;' }}">
+                        <label class="text-muted" style="font-size: 12px; display: block; margin-bottom: 8px;">Fréquence</label>
+                        <select name="frequency"
+                            style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none;">
+                            <option value="weekly" {{ $expense->frequency == 'weekly' ? 'selected' : '' }}>Hebdomadaire</option>
+                            <option value="monthly" {{ $expense->frequency == 'monthly' ? 'selected' : '' }}>Mensuel</option>
+                            <option value="yearly" {{ $expense->frequency == 'yearly' ? 'selected' : '' }}>Annuel</option>
+                        </select>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn btn-primary" style="width: 100%; background: #ef4444;">Mettre à
                     jour</button>
             </form>
