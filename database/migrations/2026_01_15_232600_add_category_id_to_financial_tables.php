@@ -10,8 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('financial_tables', function (Blueprint $table) {
-            //
+        Schema::table('revenues', function (Blueprint $table) {
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
+        });
+
+        Schema::table('expenses', function (Blueprint $table) {
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
+        });
+
+        Schema::table('savings', function (Blueprint $table) {
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
         });
     }
 
@@ -20,8 +28,19 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('financial_tables', function (Blueprint $table) {
-            //
+        Schema::table('revenues', function (Blueprint $table) {
+            $table->dropForeign(['category_id']);
+            $table->dropColumn('category_id');
+        });
+
+        Schema::table('expenses', function (Blueprint $table) {
+            $table->dropForeign(['category_id']);
+            $table->dropColumn('category_id');
+        });
+
+        Schema::table('savings', function (Blueprint $table) {
+            $table->dropForeign(['category_id']);
+            $table->dropColumn('category_id');
         });
     }
 };

@@ -59,8 +59,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Transactions (Unified view)
     Route::get('/transactions', function () {
-        $revenues = \App\Models\Revenue::where('user_id', '=', auth()->id())->get();
-        $expenses = \App\Models\Expense::where('user_id', '=', auth()->id())->get();
+        $revenues = \App\Models\Revenue::with('category')->where('user_id', '=', auth()->id())->get();
+        $expenses = \App\Models\Expense::with('category')->where('user_id', '=', auth()->id())->get();
         return view('mobile.transactions', compact('revenues', 'expenses'));
     })->name('transactions');
 

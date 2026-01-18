@@ -17,7 +17,13 @@ class Revenue extends Model
         'is_recurrent',
         'frequency',
         'due_date',
+        'category_id',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function user()
     {

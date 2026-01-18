@@ -2,20 +2,20 @@
 
 @section('content')
     <div class="fade-in" x-data="{ 
-                menuOpen: false, 
-                activeSaving: null, 
-                contributionOpen: false,
-                historyOpen: false,
-                openMenu(saving) {
-                    this.activeSaving = saving;
-                    this.menuOpen = true;
-                    this.historyOpen = false;
-                },
-                closeMenu() {
-                    this.menuOpen = false;
-                    this.contributionOpen = false;
-                }
-            }">
+                    menuOpen: false, 
+                    activeSaving: null, 
+                    contributionOpen: false,
+                    historyOpen: false,
+                    openMenu(saving) {
+                        this.activeSaving = saving;
+                        this.menuOpen = true;
+                        this.historyOpen = false;
+                    },
+                    closeMenu() {
+                        this.menuOpen = false;
+                        this.contributionOpen = false;
+                    }
+                }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Mon Épargne</h2>
             <a href="{{ route('savings.create') }}" class="btn btn-accent" style="padding: 8px 16px; border-radius: 50px;">+
@@ -33,14 +33,15 @@
                     <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div
-                                style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(16, 185, 129, 0.1); color: #10b981;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M19 12H5" />
-                                    <path d="M12 19V5" />
-                                </svg>
+                                style="width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: {{ $saving->category->color ?? 'rgba(16, 185, 129, 0.1)' }}20; color: {{ $saving->category->color ?? '#10b981' }}; font-size: 20px;">
+                                {{ $saving->category->icon ?? '🐷' }}
                             </div>
-                            <span class="text-bold" style="font-size: 15px;">{{ $saving->target_name }}</span>
+                            <div>
+                                <span class="text-bold"
+                                    style="font-size: 15px; display: block;">{{ $saving->target_name }}</span>
+                                <span class="text-muted"
+                                    style="font-size: 10px;">{{ $saving->category->name ?? 'Sans catégorie' }}</span>
+                            </div>
                         </div>
                         <span
                             style="font-size: 11px; font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 6px;">{{ number_format($percentage, 0) }}%</span>
@@ -87,6 +88,10 @@
                     </div>
 
                     <div style="text-align: center; margin-bottom: 25px;">
+                        <div
+                            style="width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 15px;">
+                            <span x-text="activeSaving.category?.icon || '🐷'"></span>
+                        </div>
                         <h3 class="text-bold" style="font-size: 22px; margin-bottom: 5px;"
                             x-text="activeSaving.target_name"></h3>
                         <p style="color: #10b981; font-weight: 700; font-size: 18px;"

@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'user@manage.com',
             'password' => bcrypt('password'),
         ]);
-        $user->assignRole($userRole); 
+        $user->assignRole($userRole);
 
         // Initialize Module Settings for User
         $modules = ['revenues', 'expenses', 'debts', 'claims', 'savings', 'forecasts'];
@@ -46,5 +46,8 @@ class DatabaseSeeder extends Seeder
                 'is_enabled' => true,
             ]);
         }
+
+        // Run Category Seeder
+        $this->call(CategorySeeder::class);
     }
 }

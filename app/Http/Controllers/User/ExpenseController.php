@@ -5,26 +5,31 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Expense;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
     public function index()
     {
-        $expenses = Expense::where('user_id', Auth::id())->orderBy('date', 'desc')->get();
+        $expenses = Expense::with('category')->where('user_id', '=', Auth::id())->orderBy('date', 'desc')->get();
         return view('mobile.expenses.index', compact('expenses'));
     }
 
     public function create()
     {
-        return view('mobile.expenses.create');
+        $categories = Category::where('type', '=', 'expense')
+            ->where(function ($q) {
+                $q->whereNull('user_id')->orWhere('user_id', '=', Auth::id());
+            })->get();
+        return view('mobile.expenses.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'amount' => 'required|numeric',
-            'category' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'is_recurrent' => 'boolean',
             'frequency' => 'nullable|string',
@@ -40,6 +45,10 @@ class ExpenseController extends Controller
         }
 
         $validated['user_id'] = Auth::id();
+
+        // Remove old 'category' string field if it exists in DB as we use category_id now
+        // But for consistency with the model, let's keep it handled if needed.
+
         Expense::create($validated);
 
         return redirect()->route('expenses.index')->with('success', 'Dépense ajoutée !');
@@ -47,17 +56,21 @@ class ExpenseController extends Controller
 
     public function edit(string $id)
     {
-        $expense = Expense::where('user_id', Auth::id())->findOrFail($id);
-        return view('mobile.expenses.edit', compact('expense'));
+        $expense = Expense::where('user_id', '=', Auth::id())->findOrFail($id);
+        $categories = Category::where('type', '=', 'expense')
+            ->where(function ($q) {
+                $q->whereNull('user_id')->orWhere('user_id', '=', Auth::id());
+            })->get();
+        return view('mobile.expenses.edit', compact('expense', 'categories'));
     }
 
     public function update(Request $request, string $id)
     {
-        $expense = Expense::where('user_id', Auth::id())->findOrFail($id);
+        $expense = Expense::where('user_id', '=', Auth::id())->findOrFail($id);
 
         $validated = $request->validate([
             'amount' => 'required|numeric',
-            'category' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'is_recurrent' => 'boolean',
             'frequency' => 'nullable|string',
@@ -79,7 +92,7 @@ class ExpenseController extends Controller
 
     public function destroy(string $id)
     {
-        $expense = Expense::where('user_id', Auth::id())->findOrFail($id);
+        $expense = Expense::where('user_id', '=', Auth::id())->findOrFail($id);
         $expense->delete();
 
         return redirect()->route('expenses.index')->with('success', 'Dépense supprimée !');

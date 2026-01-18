@@ -5,19 +5,24 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Revenue;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
 class RevenueController extends Controller
 {
     public function index()
     {
-        $revenues = Revenue::where('user_id', Auth::id())->orderBy('due_date', 'desc')->get();
+        $revenues = Revenue::with('category')->where('user_id', '=', Auth::id())->orderBy('due_date', 'desc')->get();
         return view('mobile.revenues.index', compact('revenues'));
     }
 
     public function create()
     {
-        return view('mobile.revenues.create');
+        $categories = Category::where('type', '=', 'revenue')
+            ->where(function ($q) {
+                $q->whereNull('user_id')->orWhere('user_id', '=', Auth::id());
+            })->get();
+        return view('mobile.revenues.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -25,6 +30,7 @@ class RevenueController extends Controller
         $validated = $request->validate([
             'amount' => 'required|numeric',
             'source' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'is_recurrent' => 'boolean',
             'frequency' => 'nullable|string',
@@ -47,17 +53,22 @@ class RevenueController extends Controller
 
     public function edit(string $id)
     {
-        $revenue = Revenue::where('user_id', Auth::id())->findOrFail($id);
-        return view('mobile.revenues.edit', compact('revenue'));
+        $revenue = Revenue::where('user_id', '=', Auth::id())->findOrFail($id);
+        $categories = Category::where('type', '=', 'revenue')
+            ->where(function ($q) {
+                $q->whereNull('user_id')->orWhere('user_id', '=', Auth::id());
+            })->get();
+        return view('mobile.revenues.edit', compact('revenue', 'categories'));
     }
 
     public function update(Request $request, string $id)
     {
-        $revenue = Revenue::where('user_id', Auth::id())->findOrFail($id);
+        $revenue = Revenue::where('user_id', '=', Auth::id())->findOrFail($id);
 
         $validated = $request->validate([
             'amount' => 'required|numeric',
             'source' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'is_recurrent' => 'boolean',
             'frequency' => 'nullable|string',
@@ -79,7 +90,7 @@ class RevenueController extends Controller
 
     public function destroy(string $id)
     {
-        $revenue = Revenue::where('user_id', Auth::id())->findOrFail($id);
+        $revenue = Revenue::where('user_id', '=', Auth::id())->findOrFail($id);
         $revenue->delete();
 
         return redirect()->route('revenues.index')->with('success', 'Revenu supprimé !');

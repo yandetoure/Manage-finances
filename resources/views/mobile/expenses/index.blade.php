@@ -2,16 +2,16 @@
 
 @section('content')
     <div class="fade-in" x-data="{
-            menuOpen: false,
-            activeExpense: null,
-            openMenu(expense) {
-                this.activeExpense = expense;
-                this.menuOpen = true;
-            },
-            closeMenu() {
-                this.menuOpen = false;
-            }
-        }">
+                menuOpen: false,
+                activeExpense: null,
+                openMenu(expense) {
+                    this.activeExpense = expense;
+                    this.menuOpen = true;
+                },
+                closeMenu() {
+                    this.menuOpen = false;
+                }
+            }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h2 class="text-bold">Dépenses</h2>
             <a href="{{ route('expenses.create') }}" class="btn btn-primary" style="background: #ef4444;">+ Ajouter</a>
@@ -27,11 +27,18 @@
                     <div class="glass-card" @click="openMenu({{ Js::from($expense) }})"
                         style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; cursor: pointer; transition: transform 0.2s;"
                         onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                        <div>
-                            <p class="text-bold" style="font-size: 14px;">{{ $expense->category }}</p>
-                            <p class="text-muted" style="font-size: 12px;">
-                                {{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}
-                            </p>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div
+                                style="width: 45px; height: 45px; background: {{ $expense->category_id ? ($expense->categoryRel->color ?? 'rgba(239, 68, 68, 0.1)') : 'rgba(239, 68, 68, 0.1)' }}20; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                                {{ $expense->categoryRel->icon ?? '📦' }}
+                            </div>
+                            <div>
+                                <p class="text-bold" style="font-size: 14px;">
+                                    {{ $expense->categoryRel->name ?? $expense->category }}</p>
+                                <p class="text-muted" style="font-size: 12px;">
+                                    {{ \Carbon\Carbon::parse($expense->date)->translatedFormat('d M Y') }}
+                                </p>
+                            </div>
                         </div>
                         <p class="text-bold" style="color: #ef4444;">
                             -{{ number_format($expense->amount, 0, ',', ' ') }} {{ auth()->user()->currency }}
@@ -54,7 +61,12 @@
                     </div>
 
                     <div style="text-align: center; margin-bottom: 25px;">
-                        <h3 class="text-bold" style="font-size: 22px; margin-bottom: 5px;" x-text="activeExpense.category">
+                        <div
+                            style="width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 15px;">
+                            <span x-text="activeExpense.category_rel?.icon || '📦'"></span>
+                        </div>
+                        <h3 class="text-bold" style="font-size: 22px; margin-bottom: 5px;"
+                            x-text="activeExpense.category_rel?.name || activeExpense.category">
                         </h3>
                         <p style="color: #ef4444; font-weight: 700; font-size: 18px;"
                             x-text="'- ' + new Intl.NumberFormat().format(activeExpense.amount) + ' {{ auth()->user()->currency }}'">

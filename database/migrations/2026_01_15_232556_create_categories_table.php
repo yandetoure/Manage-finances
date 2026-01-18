@@ -12,6 +12,11 @@ return new class extends Migration {
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('name');
+            $table->string('icon');
+            $table->string('type'); // revenue, expense, saving
+            $table->string('color')->nullable();
             $table->timestamps();
         });
     }

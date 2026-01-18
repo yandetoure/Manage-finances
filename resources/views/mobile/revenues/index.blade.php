@@ -2,16 +2,16 @@
 
 @section('content')
     <div class="fade-in" x-data="{
-            menuOpen: false,
-            activeRevenue: null,
-            openMenu(revenue) {
-                this.activeRevenue = revenue;
-                this.menuOpen = true;
-            },
-            closeMenu() {
-                this.menuOpen = false;
-            }
-        }">
+                menuOpen: false,
+                activeRevenue: null,
+                openMenu(revenue) {
+                    this.activeRevenue = revenue;
+                    this.menuOpen = true;
+                },
+                closeMenu() {
+                    this.menuOpen = false;
+                }
+            }">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 class="text-bold">Mes Revenus</h2>
             <a href="{{ route('revenues.create') }}" class="btn btn-primary"
@@ -22,9 +22,17 @@
             <div class="glass-card fade-in" @click="openMenu({{ Js::from($revenue) }})"
                 style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: transform 0.2s;"
                 onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-                <div>
-                    <p class="text-bold">{{ $revenue->source }}</p>
-                    <p class="text-muted" style="font-size: 12px;">{{ $revenue->due_date ?? 'Pas de date' }}</p>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div
+                        style="width: 45px; height: 45px; background: {{ $revenue->category->color ?? 'rgba(255,255,255,0.1)' }}20; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                        {{ $revenue->category->icon ?? '➕' }}
+                    </div>
+                    <div>
+                        <p class="text-bold">{{ $revenue->source }}</p>
+                        <p class="text-muted" style="font-size: 11px;">
+                            {{ $revenue->category->name ?? 'Sans catégorie' }} • {{ $revenue->due_date ?? 'Pas de date' }}
+                        </p>
+                    </div>
                 </div>
                 <div style="text-align: right;">
                     <p class="text-bold text-green">+ {{ number_format($revenue->amount, 0, ',', ' ') }}
@@ -55,12 +63,18 @@
                     </div>
 
                     <div style="text-align: center; margin-bottom: 25px;">
+                        <div
+                            style="width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 15px;">
+                            <span x-text="activeRevenue.category?.icon || '➕'"></span>
+                        </div>
                         <h3 class="text-bold" style="font-size: 22px; margin-bottom: 5px;" x-text="activeRevenue.source">
                         </h3>
                         <p style="color: #10b981; font-weight: 700; font-size: 18px;"
                             x-text="new Intl.NumberFormat().format(activeRevenue.amount) + ' {{ auth()->user()->currency }}'">
                         </p>
-                        <p class="text-muted" style="font-size: 13px; margin-top: 5px;" x-text="activeRevenue.due_date">
+                        <p class="text-muted" style="font-size: 13px; margin-top: 5px;">
+                            <span x-text="activeRevenue.category?.name || 'Sans catégorie'"></span> • <span
+                                x-text="activeRevenue.due_date"></span>
                         </p>
                     </div>
 
