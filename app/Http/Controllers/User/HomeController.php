@@ -32,7 +32,8 @@ class HomeController extends Controller
 
         $totalSavings = Saving::where('user_id', '=', $user->id, 'and')->sum('current_amount');
 
-        $balance = $totalRevenue - $totalExpenses;
+        // Calculate cumulative balance up to current month
+        $balance = $this->calculateCumulativeBalance($user->id, now()->month, now()->year);
 
         return view('mobile.dashboard', compact('balance', 'totalDebts', 'totalSavings', 'totalRevenue', 'totalExpenses', 'totalClaims'));
     }
@@ -129,7 +130,8 @@ class HomeController extends Controller
             ->whereYear('created_at', '=', $year)
             ->sum('amount');
 
-        $balance = $totalRevenue - $totalExpenses;
+        // Calculate cumulative balance (includes previous month's balance)
+        $balance = $this->calculateCumulativeBalance($user->id, $month, $year);
 
         // Data for Category Distribution (Selected Month)
         $expensesByCategory = Expense::where('user_id', '=', $user->id, 'and')
@@ -195,5 +197,66 @@ class HomeController extends Controller
             'expensesByCategory',
             'sixMonthTrend'
         ));
+    }
+
+    /**
+     * Calculate cumulative balance for a given month including previous months
+     */
+    private function calculateCumulativeBalance($userId, $month, $year)
+    {
+        // Calculate current month's balance
+        $selectedDate = \Carbon\Carbon::create($year, $month, 1)->endOfMonth();
+
+        $monthRevenue = Revenue::where('user_id', $userId)
+            ->where(function ($query) use ($month, $year, $selectedDate) {
+                $query->where(function ($q) use ($month, $year) {
+                    $q->whereMonth('due_date', $month)->whereYear('due_date', $year);
+                })->orWhere(function ($q) use ($selectedDate) {
+                    $q->where('is_recurrent', true)->where('due_date', '<=', $selectedDate);
+                });
+            })
+            ->sum('amount');
+
+        $monthExpenses = Expense::where('user_id', $userId)
+            ->where(function ($query) use ($month, $year, $selectedDate) {
+                $query->where(function ($q) use ($month, $year) {
+                    $q->whereMonth('date', $month)->whereYear('date', $year);
+                })->orWhere(function ($q) use ($selectedDate) {
+                    $q->where('is_recurrent', true)->where('date', '<=', $selectedDate);
+                });
+            })
+            ->sum('amount');
+
+        $currentMonthBalance = $monthRevenue - $monthExpenses;
+
+        // Find the first month with data
+        $firstRevenue = Revenue::where('user_id', $userId)->orderBy('due_date', 'asc')->first();
+        $firstExpense = Expense::where('user_id', $userId)->orderBy('date', 'asc')->first();
+
+        $firstDate = null;
+        if ($firstRevenue && $firstExpense) {
+            $firstDate = min($firstRevenue->due_date, $firstExpense->date);
+        } elseif ($firstRevenue) {
+            $firstDate = $firstRevenue->due_date;
+        } elseif ($firstExpense) {
+            $firstDate = $firstExpense->date;
+        }
+
+        // Calculate previous month
+        $previousMonth = \Carbon\Carbon::create($year, $month, 1)->subMonth();
+
+        // If we're at or before the first month with data, return current month balance only
+        if (!$firstDate || $previousMonth->lt(\Carbon\Carbon::parse($firstDate)->startOfMonth())) {
+            return $currentMonthBalance;
+        }
+
+        // Otherwise, add previous month's cumulative balance
+        $previousBalance = $this->calculateCumulativeBalance(
+            $userId,
+            $previousMonth->month,
+            $previousMonth->year
+        );
+
+        return $currentMonthBalance + $previousBalance;
     }
 }
