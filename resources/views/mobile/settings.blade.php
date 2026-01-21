@@ -296,74 +296,94 @@
                         </label>
                     </div>
                 </div>
-                <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.03);">
-                    <div class="settings-row" style="border-bottom: none;">
-                        <div class="settings-row-left">
-                            <div class="settings-icon-box"
-                                style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">🎨</div>
-                            <span class="settings-label">{{ __("Couleur d'accentuation") }}</span>
+                <div class="settings-row" style="cursor: pointer;"
+                    onclick="document.getElementById('colorPickerModal').style.display='flex'">
+                    <div class="settings-row-left">
+                        <div class="settings-icon-box"
+                            style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-blue);">🎨</div>
+                        <span class="settings-label">{{ __("Couleur d'accentuation") }}</span>
+                    </div>
+                    <div class="settings-row-right">
+                        <div
+                            style="width: 32px; height: 32px; border-radius: 10px; background: var(--accent-gradient); border: 2px solid var(--card-border);">
                         </div>
+                        <span>→</span>
                     </div>
-                    <div style="padding: 16px;">
-                        @php
-                            $paletteGroups = [
-                                'Classiques' => [
-                                    'blue' => '#3B82F6',
-                                    'emerald' => '#10B981',
-                                    'rose' => '#F43F5E',
-                                    'amber' => '#F59E0B',
-                                    'indigo' => '#6366F1',
-                                    'purple' => '#A855F7',
-                                    'zinc' => '#71717a',
-                                    'orange' => '#f97316',
-                                    'cyan' => '#06b6d4',
-                                    'lime' => '#84cc16',
-                                    'pink' => '#ec4899',
-                                    'teal' => '#14b8a6',
-                                ],
-                                'Sombres' => [
-                                    'night' => '#334155',
-                                    'forest' => '#065f46',
-                                    'burgundy' => '#991b1b',
-                                    'cacao' => '#78350f',
-                                    'midnight' => '#1e1b4b',
-                                ],
-                                'Doux' => [
-                                    'sky' => '#7dd3fc',
-                                    'mint' => '#6ee7b7',
-                                    'sakura' => '#fbcfe8',
-                                    'lavender' => '#ddd6fe',
-                                    'sand' => '#fde68a',
-                                    'olive' => '#d9f99d',
-                                ],
-                                'Dégradés' => [
-                                    'sunset' => 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
-                                    'ocean' => 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
-                                    'cosmic' => 'linear-gradient(135deg, #a855f7 0%, #6366f1 100%)',
-                                    'fire' => 'linear-gradient(135deg, #f87171 0%, #7f1d1d 100%)',
-                                    'tropical' => 'linear-gradient(135deg, #34d399 0%, #3b82f6 100%)',
-                                    'berry' => 'linear-gradient(135deg, #fb7185 0%, #881337 100%)',
-                                    'gold' => 'linear-gradient(135deg, #fbbf24 0%, #92400e 100%)',
-                                ],
-                            ];
-                        @endphp
+                </div>
+            </div>
 
-                        @foreach($paletteGroups as $groupName => $colors)
-                            <p
-                                style="font-size: 10px; color: var(--text-muted); margin-bottom: 8px; {{ $loop->first ? '' : 'margin-top: 15px;' }}">
-                                {{ __($groupName) }}
-                            </p>
-                            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;">
-                                @foreach($colors as $key => $style)
-                                    <label class="color-bubble {{ ($settings->accent_color ?? 'blue') == $key ? 'active' : '' }}"
-                                        style="background: {{ $style }};" onclick="selectColor(this, '{{ $key }}')">
-                                        <input type="radio" name="accent_color" value="{{ $key }}" style="display: none;" {{ ($settings->accent_color ?? 'blue') == $key ? 'checked' : '' }}>
-                                        <span class="check">✓</span>
-                                    </label>
-                                @endforeach
-                            </div>
-                        @endforeach
+            <!-- Color Picker Modal -->
+            <div id="colorPickerModal"
+                style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px;"
+                onclick="if(event.target === this) this.style.display='none'">
+                <div class="glass-card"
+                    style="max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 24px;"
+                    onclick="event.stopPropagation()">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 700; margin: 0;">{{ __("Choisir une couleur") }}</h3>
+                        <button onclick="document.getElementById('colorPickerModal').style.display='none'"
+                            style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted); padding: 0; width: 32px; height: 32px;">×</button>
                     </div>
+
+                    @php
+                        $paletteGroups = [
+                            'Classiques' => [
+                                'blue' => '#3B82F6',
+                                'emerald' => '#10B981',
+                                'rose' => '#F43F5E',
+                                'amber' => '#F59E0B',
+                                'indigo' => '#6366F1',
+                                'purple' => '#A855F7',
+                                'zinc' => '#71717a',
+                                'orange' => '#f97316',
+                                'cyan' => '#06b6d4',
+                                'lime' => '#84cc16',
+                                'pink' => '#ec4899',
+                                'teal' => '#14b8a6',
+                            ],
+                            'Sombres' => [
+                                'night' => '#334155',
+                                'forest' => '#065f46',
+                                'burgundy' => '#991b1b',
+                                'cacao' => '#78350f',
+                                'midnight' => '#1e1b4b',
+                            ],
+                            'Doux' => [
+                                'sky' => '#7dd3fc',
+                                'mint' => '#6ee7b7',
+                                'sakura' => '#fbcfe8',
+                                'lavender' => '#ddd6fe',
+                                'sand' => '#fde68a',
+                                'olive' => '#d9f99d',
+                            ],
+                            'Dégradés' => [
+                                'sunset' => 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+                                'ocean' => 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
+                                'cosmic' => 'linear-gradient(135deg, #a855f7 0%, #6366f1 100%)',
+                                'fire' => 'linear-gradient(135deg, #f87171 0%, #7f1d1d 100%)',
+                                'tropical' => 'linear-gradient(135deg, #34d399 0%, #3b82f6 100%)',
+                                'berry' => 'linear-gradient(135deg, #fb7185 0%, #881337 100%)',
+                                'gold' => 'linear-gradient(135deg, #fbbf24 0%, #92400e 100%)',
+                            ],
+                        ];
+                    @endphp
+
+                    @foreach($paletteGroups as $groupName => $colors)
+                        <p
+                            style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px; {{ $loop->first ? '' : 'margin-top: 20px;' }} font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                            {{ __($groupName) }}
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;">
+                            @foreach($colors as $key => $style)
+                                <label class="color-bubble {{ ($settings->accent_color ?? 'blue') == $key ? 'active' : '' }}"
+                                    style="background: {{ $style }}; cursor: pointer;"
+                                    onclick="selectColor(this, '{{ $key }}'); setTimeout(() => document.getElementById('colorPickerModal').style.display='none', 300);">
+                                    <input type="radio" name="accent_color" value="{{ $key }}" style="display: none;" {{ ($settings->accent_color ?? 'blue') == $key ? 'checked' : '' }}>
+                                    <span class="check">✓</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -596,72 +616,72 @@
                     status.style.color = '#ef4444';
                 }
             }
-        // Currency Converter Alpine.js Component
-                function currencyConverter() {
-                    return {
-                        from: '{{ auth()->user()->settings->currency ?? "USD" }}',
-                        to: 'EUR',
-                        amount: 1,
-                        result: null,
-                        rate: 0,
-                        loading: false,
-                        error: null,
+            // Currency Converter Alpine.js Component
+            function currencyConverter() {
+                return {
+                    from: '{{ auth()->user()->settings->currency ?? "USD" }}',
+                    to: 'EUR',
+                    amount: 1,
+                    result: null,
+                    rate: 0,
+                    loading: false,
+                    error: null,
 
-                        init() {
-                            this.convert();
-                        },
+                    init() {
+                        this.convert();
+                    },
 
-                        swap() {
-                            [this.from, this.to] = [this.to, this.from];
-                            this.convert();
-                        },
+                    swap() {
+                        [this.from, this.to] = [this.to, this.from];
+                        this.convert();
+                    },
 
-                        async convert() {
-                            if (!this.amount || this.amount <= 0) {
-                                this.result = 0;
+                    async convert() {
+                        if (!this.amount || this.amount <= 0) {
+                            this.result = 0;
+                            return;
+                        }
+
+                        this.loading = true;
+                        this.error = null;
+
+                        try {
+                            // Check cache first
+                            const cacheKey = `rate_${this.from}_${this.to}`;
+                            const cached = localStorage.getItem(cacheKey);
+                            const cacheTime = localStorage.getItem(`${cacheKey}_time`);
+                            const now = Date.now();
+
+                            // Use cache if less than 1 hour old
+                            if (cached && cacheTime && (now - parseInt(cacheTime)) < 3600000) {
+                                this.rate = parseFloat(cached);
+                                this.result = this.amount * this.rate;
+                                this.loading = false;
                                 return;
                             }
 
-                            this.loading = true;
-                            this.error = null;
+                            // Fetch from API
+                            const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${this.from}`);
+                            const data = await response.json();
 
-                            try {
-                                // Check cache first
-                                const cacheKey = `rate_${this.from}_${this.to}`;
-                                const cached = localStorage.getItem(cacheKey);
-                                const cacheTime = localStorage.getItem(`${cacheKey}_time`);
-                                const now = Date.now();
+                            if (data.rates && data.rates[this.to]) {
+                                this.rate = data.rates[this.to];
+                                this.result = this.amount * this.rate;
 
-                                // Use cache if less than 1 hour old
-                                if (cached && cacheTime && (now - parseInt(cacheTime)) < 3600000) {
-                                    this.rate = parseFloat(cached);
-                                    this.result = this.amount * this.rate;
-                                    this.loading = false;
-                                    return;
-                                }
-
-                                // Fetch from API
-                                const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${this.from}`);
-                                const data = await response.json();
-
-                                if (data.rates && data.rates[this.to]) {
-                                    this.rate = data.rates[this.to];
-                                    this.result = this.amount * this.rate;
-
-                                    // Cache the rate
-                                    localStorage.setItem(cacheKey, this.rate.toString());
-                                    localStorage.setItem(`${cacheKey}_time`, now.toString());
-                                } else {
-                                    this.error = 'Taux de change non disponible';
-                                }
-                            } catch (err) {
-                                this.error = 'Erreur de connexion';
-                                console.error('Currency conversion error:', err);
-                            } finally {
-                                this.loading = false;
+                                // Cache the rate
+                                localStorage.setItem(cacheKey, this.rate.toString());
+                                localStorage.setItem(`${cacheKey}_time`, now.toString());
+                            } else {
+                                this.error = 'Taux de change non disponible';
                             }
+                        } catch (err) {
+                            this.error = 'Erreur de connexion';
+                            console.error('Currency conversion error:', err);
+                        } finally {
+                            this.loading = false;
                         }
                     }
                 }
-            </script>
+            }
+        </script>
 @endsection

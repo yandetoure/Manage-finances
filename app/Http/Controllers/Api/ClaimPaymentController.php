@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Claim;
 use App\Models\ClaimPayment;
+use App\Models\Revenue;
 use Illuminate\Support\Facades\Auth;
 
 class ClaimPaymentController extends Controller
@@ -30,6 +31,17 @@ class ClaimPaymentController extends Controller
         $claim = Claim::where('user_id', Auth::id())->findOrFail($validated['claim_id']);
 
         $payment = ClaimPayment::create($validated);
+
+        // Create a revenue entry to update the monthly balance
+        Revenue::create([
+            'user_id' => $claim->user_id,
+            'amount' => $validated['amount'],
+            'source' => 'Recouvrement - ' . $claim->debtor,
+            'description' => $validated['note'] ?? $claim->description,
+            'due_date' => $validated['payment_date'],
+            'is_recurrent' => false,
+            'category_id' => null,
+        ]);
 
         // Check if fully paid
         $totalPaid = $claim->payments()->sum('amount');

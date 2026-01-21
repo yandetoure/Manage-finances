@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Debt;
 use App\Models\DebtPayment;
+use App\Models\Expense;
 use Illuminate\Support\Facades\Auth;
 
 class DebtPaymentController extends Controller
@@ -30,6 +31,17 @@ class DebtPaymentController extends Controller
         $debt = Debt::where('user_id', Auth::id())->findOrFail($validated['debt_id']);
 
         $payment = DebtPayment::create($validated);
+
+        // Create an expense entry to update the monthly balance
+        Expense::create([
+            'user_id' => $debt->user_id,
+            'amount' => $validated['amount'],
+            'category' => 'Remboursement dette - ' . $debt->creditor,
+            'description' => $validated['note'] ?? $debt->description,
+            'date' => $validated['payment_date'],
+            'is_recurrent' => false,
+            'category_id' => null,
+        ]);
 
         // Check if fully paid
         $totalPaid = $debt->payments()->sum('amount');
