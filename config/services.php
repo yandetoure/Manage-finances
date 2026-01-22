@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'naboopay' => [
+        'api_key' => env('NABOOPAY_API_KEY'),
+        'base_url' => env('NABOOPAY_BASE_URL', 'https://api.naboopay.com/api/v1'),
+        'webhook_secret' => env('NABOOPAY_WEBHOOK_SECRET'),
+    ],
+
 ];

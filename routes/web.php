@@ -33,6 +33,9 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
+// Naboopay Webhook (outside auth middleware)
+Route::post('/webhook/naboopay', [\App\Http\Controllers\User\NaboopayController::class, 'webhook'])->name('webhook.naboopay');
+
 // Temp Login Route for testing
 Route::get('/login-test', function () {
     $user = User::where('email', '=', 'user@manage.com')->first();
@@ -63,6 +66,13 @@ Route::middleware(['auth'])->group(function () {
         $expenses = \App\Models\Expense::with('category')->where('user_id', '=', auth()->id())->get();
         return view('mobile.transactions', compact('revenues', 'expenses'));
     })->name('transactions');
+
+    // Naboopay routes
+    Route::prefix('naboopay')->name('naboopay.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\NaboopayController::class, 'index'])->name('index');
+        Route::post('/checkout', [\App\Http\Controllers\User\NaboopayController::class, 'createCheckout'])->name('checkout');
+        Route::post('/payout', [\App\Http\Controllers\User\NaboopayController::class, 'createPayout'])->name('payout');
+    });
 
     Route::get('/analytics', [HomeController::class, 'analytics'])->name('analytics');
     Route::get('/settings', [HomeController::class, 'settings'])->name('settings');
