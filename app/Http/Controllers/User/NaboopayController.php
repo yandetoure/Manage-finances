@@ -26,18 +26,76 @@ class NaboopayController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+
+        $status = $request->get('status');
+        $orderId = $request->get('order_id'); // Naboopay peut renvoyer l'order_id
+        $message = null;
+
+        // Si l'utilisateur revient de Naboopay, vérifier le statut de la transaction
+        if ($status === 'success' && $orderId) {
+            try {
+                // Récupérer le statut de la transaction depuis Naboopay
+                $transactionStatus = $this->naboopayService->getTransaction($orderId);
+
+                if ($transactionStatus['success'] && isset($transactionStatus['data'])) {
+                    $data = $transactionStatus['data'];
+
+                    // Trouver la transaction dans notre base de données
+                    $transaction = NaboopayTransaction::where('transaction_id', $orderId)
+                        ->orWhere('metadata->order_id', $orderId)
+                        ->first();
+
+                    if ($transaction && $transaction->status === 'pending') {
+                        // Vérifier le statut de la transaction Naboopay
+                        $nabooStatus = strtolower($data['transaction_status'] ?? $data['status'] ?? '');
+
+                        if (in_array($nabooStatus, ['paid', 'completed', 'success', 'done'])) {
+                            DB::beginTransaction();
+                            try {
+                                // Mettre à jour la transaction
+                                $transaction->update([
+                                    'status' => 'completed',
+                                    'payment_method' => $data['payment_method'] ?? null,
+                                    'metadata' => $data,
+                                ]);
+
+                                // Ajouter au solde de l'utilisateur
+                                $user->naboopay_balance += $transaction->amount;
+                                $user->save();
+
+                                DB::commit();
+
+                                $message = ['type' => 'success', 'text' => 'Paiement confirmé ! Votre solde a été mis à jour : +' . number_format((float) $transaction->amount, 0, ',', ' ') . ' XOF'];
+                            } catch (\Exception $e) {
+                                DB::rollBack();
+                                Log::error('Error updating transaction status', ['error' => $e->getMessage()]);
+                            }
+                        } elseif (in_array($nabooStatus, ['failed', 'cancelled', 'cancel'])) {
+                            $transaction->update([
+                                'status' => 'failed',
+                                'error_message' => $data['error'] ?? 'Paiement échoué',
+                            ]);
+                            $message = ['type' => 'error', 'text' => 'Le paiement a échoué.'];
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::error('Error checking transaction status', ['error' => $e->getMessage()]);
+            }
+        }
+
+        // Messages par défaut si pas de vérification de statut
+        if (!$message) {
+            if ($status === 'success') {
+                $message = ['type' => 'success', 'text' => 'Paiement effectué avec succès ! Votre solde sera mis à jour dans quelques instants.'];
+            } elseif ($status === 'cancelled') {
+                $message = ['type' => 'warning', 'text' => 'Paiement annulé.'];
+            }
+        }
+
         $transactions = NaboopayTransaction::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-
-        $status = $request->get('status');
-        $message = null;
-
-        if ($status === 'success') {
-            $message = ['type' => 'success', 'text' => 'Paiement effectué avec succès ! Votre solde sera mis à jour dans quelques instants.'];
-        } elseif ($status === 'cancelled') {
-            $message = ['type' => 'warning', 'text' => 'Paiement annulé.'];
-        }
 
         return view('mobile.naboopay.index', compact('user', 'transactions', 'message'));
     }

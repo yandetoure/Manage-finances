@@ -146,10 +146,51 @@ class NaboopayService
     public function getTransaction($transactionId)
     {
         try {
+            Log::info('Naboopay - Checking transaction status', ['transaction_id' => $transactionId]);
+
+            // Try multiple possible endpoints for transaction status
+            $endpoints = [
+                '/transaction/' . $transactionId,
+                '/transaction/get-transaction',
+                '/transactions/' . $transactionId,
+            ];
+
+            foreach ($endpoints as $endpoint) {
+                try {
+                    $response = Http::withHeaders([
+                        'Authorization' => 'Bearer ' . $this->apiKey,
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ])->get($this->baseUrl . $endpoint);
+
+                    if ($response->successful()) {
+                        Log::info('Naboopay - Transaction status retrieved', [
+                            'endpoint' => $endpoint,
+                            'data' => $response->json()
+                        ]);
+
+                        return [
+                            'success' => true,
+                            'data' => $response->json(),
+                        ];
+                    }
+                } catch (\Exception $e) {
+                    Log::warning('Naboopay - Endpoint failed', [
+                        'endpoint' => $endpoint,
+                        'error' => $e->getMessage()
+                    ]);
+                    continue;
+                }
+            }
+
+            // If GET doesn't work, try POST
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-            ])->get($this->baseUrl . '/transactions/' . $transactionId);
+            ])->post($this->baseUrl . '/transaction/get-transaction', [
+                        'order_id' => $transactionId,
+                    ]);
 
             if ($response->successful()) {
                 return [
@@ -157,6 +198,8 @@ class NaboopayService
                     'data' => $response->json(),
                 ];
             }
+
+            Log::error('Naboopay - Transaction not found', ['transaction_id' => $transactionId]);
 
             return [
                 'success' => false,
